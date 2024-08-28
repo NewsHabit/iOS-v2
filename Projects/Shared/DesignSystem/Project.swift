@@ -7,7 +7,8 @@ let targets: [Target] = [
         implements: .DesignSystem,
         factory: .init(
             dependencies: [
-                .shared(implements: .ThirdPartyLib)
+                .shared(implements: .ThirdPartyLib),
+                .shared(implements: .Util)
             ]
         )
     )
