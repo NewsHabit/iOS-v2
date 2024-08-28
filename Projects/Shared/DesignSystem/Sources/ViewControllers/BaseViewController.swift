@@ -42,7 +42,8 @@ open class BaseViewController<View: UIView>: UIViewController {
     
     private lazy var largeTitleLabel = {
         let label = UILabel()
-        label.font = Fonts.bold(size: 22.0)
+        label.font = Fonts.bold(size: 24.0)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -124,10 +125,11 @@ open class BaseViewController<View: UIView>: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    public func setRightButton(title: String) {
+    public func setRightButton(title: String, action: Selector) {
         var attributedTitle = AttributedString(title)
         attributedTitle.font = Fonts.regular(size: 16.0)
         rightButton.configuration?.attributedTitle = attributedTitle
+        rightButton.addTarget(self, action: action, for: .touchUpInside)
     }
     
     public func setRightButton(imageString: String, action: Selector) {
