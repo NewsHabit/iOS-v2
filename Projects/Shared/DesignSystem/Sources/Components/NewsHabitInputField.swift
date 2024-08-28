@@ -20,7 +20,7 @@ public final class NewsHabitInputField: UIView {
     let textField = {
         let textField = UITextField()
         textField.font = Fonts.bold(size: 16.0)
-        textField.textColor = .label
+        textField.textColor = Colors.gray08
         textField.backgroundColor = Colors.background
         textField.borderStyle = .none
         textField.autocorrectionType = .no
@@ -31,7 +31,7 @@ public final class NewsHabitInputField: UIView {
     
     private let separator = {
         let view = UIView()
-        view.backgroundColor = Colors.gray03
+        view.backgroundColor = Colors.gray02
         return view
     }()
     
@@ -46,7 +46,7 @@ public final class NewsHabitInputField: UIView {
         let label = UILabel()
         label.text = "0/\(maxLength)"
         label.font = Fonts.regular(size: 14.0)
-        label.textColor = Colors.gray03
+        label.textColor = Colors.gray04
         label.textAlignment = .right
         return label
     }()
@@ -124,13 +124,13 @@ private extension NewsHabitInputField {
         updateAlertLabel(isLengthValid: isLengthValid, containsSpace: isSpace)
 
         let isValid = isLengthValid && !isSpace
-        separator.backgroundColor = isValid ? Colors.gray03 : Colors.accent
+        separator.backgroundColor = isValid ? Colors.gray02 : Colors.accent
         alertLabel.isHidden = isValid
     }
 
     func updateLengthIndicator(currentLength: Int, isValid: Bool) {
         lengthIndicatorLabel.text = "\(currentLength)/\(maxLength)"
-        lengthIndicatorLabel.textColor = isValid ? Colors.gray03 : Colors.accent
+        lengthIndicatorLabel.textColor = isValid ? Colors.gray04 : Colors.accent
     }
 
     func updateAlertLabel(isLengthValid: Bool, containsSpace: Bool) {

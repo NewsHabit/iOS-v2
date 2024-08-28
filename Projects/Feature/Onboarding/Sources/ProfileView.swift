@@ -23,6 +23,7 @@ public final class ProfileView: UIView {
         let label = UILabel()
         label.text = "프로필을 설정해주세요"
         label.font = Fonts.bold(size: 24.0)
+        label.textColor = Colors.gray08
         return label
     }()
     
@@ -30,7 +31,7 @@ public final class ProfileView: UIView {
         let label = UILabel()
         label.text = "* 닉네임은 한/영/숫자/이모티콘 상관없이 8자 이내\n(공백 사용 불가)"
         label.font = Fonts.regular(size: 14.0)
-        label.textColor = Colors.gray02
+        label.textColor = Colors.gray04
         label.numberOfLines = 0
         return label
     }()
@@ -39,6 +40,8 @@ public final class ProfileView: UIView {
         maxLength: maxNicknameLength,
         placeholder: "닉네임"
     )
+    
+    let nextButton = NewsHabitConfirmButton(title: "다음")
     
     // MARK: - Init
     
@@ -74,6 +77,14 @@ public final class ProfileView: UIView {
             flex.addItem(nicknameTextField)
                 .marginTop(20)
                 .height(44)
+            
+            flex.addItem()
+                .grow(1)
+            
+            flex.addItem(nextButton)
+                .minHeight(56)
+                .cornerRadius(8)
+                .marginBottom(50)
         }
     }
 }

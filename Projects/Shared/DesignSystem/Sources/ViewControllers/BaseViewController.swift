@@ -16,7 +16,7 @@ open class BaseViewController<View: UIView>: UIViewController {
     
     private lazy var backButton = {
         let button = UIButton()
-        button.tintColor = .label
+        button.tintColor = Colors.gray08
         button.configuration = .plain()
         button.configuration?.image = UIImage(
             systemName: "chevron.left",
@@ -28,14 +28,14 @@ open class BaseViewController<View: UIView>: UIViewController {
     
     private lazy var rightButton = {
         let button = UIButton()
-        button.tintColor = .label
+        button.tintColor = Colors.gray08
         button.configuration = .plain()
         return button
     }()
     
     private lazy var titleLabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = Colors.gray08
         label.font = Fonts.bold(size: 16.0)
         return label
     }()
@@ -144,12 +144,12 @@ open class BaseViewController<View: UIView>: UIViewController {
         titleLabel.text = title
     }
     
-    public func setLargeTitle(_ title: String?, _ color: UIColor? = .label) {
+    public func setLargeTitle(_ title: String?, _ color: UIColor? = Colors.gray08) {
         largeTitleLabel.text = title
         largeTitleLabel.textColor = color
     }
     
-    public func setSubTitle(_ title: String?, _ color: UIColor? = .label) {
+    public func setSubTitle(_ title: String?, _ color: UIColor? = Colors.gray08) {
         subtitleLabel.text = title
         subtitleLabel.textColor = color
     }
