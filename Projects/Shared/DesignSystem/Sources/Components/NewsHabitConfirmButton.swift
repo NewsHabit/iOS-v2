@@ -13,6 +13,9 @@ public final class NewsHabitConfirmButton: UIButton {
             updateAppearance()
         }
     }
+    
+    // MARK: - Init
+    
     public init(initialEnabled: Bool = false, title: String) {
         super.init(frame: .zero)
         
@@ -24,6 +27,8 @@ public final class NewsHabitConfirmButton: UIButton {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+    
+    // MARK: - Setup
     
     private func setupButton(title: String) {
         tintColor = .white

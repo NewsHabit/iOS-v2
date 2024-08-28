@@ -10,14 +10,26 @@ import UIKit
 import FlexLayout
 import PinLayout
 
+public protocol NewsHabitInputFieldDelegate: AnyObject {
+    func inputFieldDidChange(_ inputField: NewsHabitInputField, isValid: Bool)
+}
+
 public final class NewsHabitInputField: UIView {
     private let maxLength: Int
+    
+    public weak var delegate: NewsHabitInputFieldDelegate?
+    
+    public var isValid: Bool = false {
+        didSet {
+            delegate?.inputFieldDidChange(self, isValid: isValid)
+        }
+    }
     
     // MARK: - Components
     
     private let flexContainer = UIView()
     
-    let textField = {
+    public let textField = {
         let textField = UITextField()
         textField.font = Fonts.bold(size: 16.0)
         textField.textColor = Colors.gray08
@@ -67,7 +79,7 @@ public final class NewsHabitInputField: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - layout
+    // MARK: - Layout
     
     public override func layoutSubviews() {
         super.layoutSubviews()
@@ -117,22 +129,22 @@ private extension NewsHabitInputField {
     
     func validate(text: String) {
         let currentLength = text.count
-        let isLengthValid = currentLength <= maxLength
+        let isLengthValid = currentLength <= maxLength && currentLength > 0
         let isSpace = text.contains(" ")
-
+        
         updateLengthIndicator(currentLength: currentLength, isValid: isLengthValid)
         updateAlertLabel(isLengthValid: isLengthValid, containsSpace: isSpace)
-
-        let isValid = isLengthValid && !isSpace
+        
+        isValid = isLengthValid && !isSpace
         separator.backgroundColor = isValid ? Colors.gray02 : Colors.accent
         alertLabel.isHidden = isValid
     }
-
+    
     func updateLengthIndicator(currentLength: Int, isValid: Bool) {
         lengthIndicatorLabel.text = "\(currentLength)/\(maxLength)"
         lengthIndicatorLabel.textColor = isValid ? Colors.gray04 : Colors.accent
     }
-
+    
     func updateAlertLabel(isLengthValid: Bool, containsSpace: Bool) {
         if !isLengthValid {
             alertLabel.text = "1~\(maxLength)자의 닉네임을 사용해주세요"

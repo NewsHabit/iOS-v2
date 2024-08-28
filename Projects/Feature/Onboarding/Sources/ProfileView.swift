@@ -36,10 +36,15 @@ public final class ProfileView: UIView {
         return label
     }()
     
-    lazy var nicknameTextField = NewsHabitInputField(
-        maxLength: maxNicknameLength,
-        placeholder: "닉네임"
-    )
+    private lazy var nicknameInputField = {
+        let view = NewsHabitInputField(
+            maxLength: maxNicknameLength,
+            placeholder: "닉네임"
+        )
+        view.textField.becomeFirstResponder()
+        view.delegate = self
+        return view
+    }()
     
     let nextButton = NewsHabitConfirmButton(title: "다음")
     
@@ -74,7 +79,7 @@ public final class ProfileView: UIView {
             flex.addItem(subTitleLabel)
                 .marginTop(40)
             
-            flex.addItem(nicknameTextField)
+            flex.addItem(nicknameInputField)
                 .marginTop(20)
                 .height(44)
             
@@ -86,5 +91,11 @@ public final class ProfileView: UIView {
                 .cornerRadius(8)
                 .marginBottom(50)
         }
+    }
+}
+
+extension ProfileView: NewsHabitInputFieldDelegate {
+    public func inputFieldDidChange(_ inputField: NewsHabitInputField, isValid: Bool) {
+        nextButton.isEnabled = nicknameInputField.isValid
     }
 }

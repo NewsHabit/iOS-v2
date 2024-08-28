@@ -16,10 +16,6 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
 }
 
 private extension ProfileViewController {
-    var nicknameTextField: NewsHabitInputField {
-        contentView.nicknameTextField
-    }
-    
     var nextButton: NewsHabitConfirmButton {
         contentView.nextButton
     }
