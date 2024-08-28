@@ -82,8 +82,6 @@ public final class ProfileView: UIView {
             flex.addItem(nicknameInputField)
                 .marginTop(20)
                 .height(44)
-            
-            flex.addItem()
                 .grow(1)
             
             flex.addItem(nextButton)
