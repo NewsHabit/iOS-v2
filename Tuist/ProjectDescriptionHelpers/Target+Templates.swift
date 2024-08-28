@@ -30,7 +30,7 @@ public struct TargetFactory {
     public init(
         name: String = "",
         destinations: Destinations = [.iPhone],
-        product: Product = .staticLibrary,
+        product: Product = .framework,
         productName: String? = nil,
         bundleId: String? = nil,
         deploymentTargets: DeploymentTargets? = Project.Environment.deploymentTargets,
@@ -134,6 +134,7 @@ public extension Target {
 public extension Target {
     static func feature(factory: TargetFactory) -> Self {
         var newFactory = factory
+        newFactory.product = .framework
         newFactory.name = ModulePath.Feature.name
         newFactory.sources = .sources
 
@@ -152,7 +153,6 @@ public extension Target {
         var newFactory = factory
         newFactory.name = ModulePath.Feature.name + module.rawValue + "Interface"
         newFactory.sources = .interface
-        newFactory.product = Environment.forPreview.getBoolean(default: false) ? .framework : .staticLibrary
 
         return make(factory: newFactory)
     }
@@ -174,6 +174,7 @@ public extension Target {
 public extension Target {
     static func domain(factory: TargetFactory) -> Self {
         var newFactory = factory
+        newFactory.product = .framework
         newFactory.name = ModulePath.Domain.name
         newFactory.sources = .sources
 
@@ -202,6 +203,7 @@ public extension Target {
 public extension Target {
     static func core(factory: TargetFactory) -> Self {
         var newFactory = factory
+        newFactory.product = .framework
         newFactory.name = ModulePath.Core.name
         newFactory.sources = .sources
 
@@ -230,6 +232,7 @@ public extension Target {
 public extension Target {
     static func shared(factory: TargetFactory) -> Self {
         var newFactory = factory
+        newFactory.product = .framework
         newFactory.name = ModulePath.Shared.name
         newFactory.sources = .sources
 
@@ -242,7 +245,6 @@ public extension Target {
         newFactory.sources = .sources
         
         if module == .DesignSystem {
-            newFactory.product = .staticFramework
             newFactory.resources = ["Resources/**"]
         }
 

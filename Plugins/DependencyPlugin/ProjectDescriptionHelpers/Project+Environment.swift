@@ -6,8 +6,11 @@ public extension Project {
         public static let deploymentTargets = DeploymentTargets.iOS("15.0")
         public static let bundleId = "com.goojiong.newshabit"
         public static let defaultSettings: Settings = .settings(
-            base: [
-                "ENABLE_USER_SCRIPT_SANDBOXING": "YES"
+            configurations: [
+                .debug(name: "Debug", settings: [
+                    "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
+                    "GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"]
+                ])
             ]
         )
         public static func appInfoPlist() -> InfoPlist {

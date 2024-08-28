@@ -16,7 +16,8 @@ let targets: [Target] = [
         factory: .init(
             dependencies: [
                 .feature(interface: .Onboarding)
-            ]
+            ],
+            settings: Project.Environment.defaultSettings
         )
     ),
     .feature(
@@ -24,8 +25,7 @@ let targets: [Target] = [
         factory: .init(
             infoPlist: Project.Environment.appInfoPlist(),
             dependencies: [
-                .feature(implements: .Onboarding),
-                .feature(interface: .Onboarding),
+                .feature(implements: .Onboarding)
             ],
             settings: Project.Environment.defaultSettings
         )
