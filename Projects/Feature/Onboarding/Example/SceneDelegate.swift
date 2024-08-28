@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = UINavigationController(
 //            rootViewController: ProfileViewController()
-            rootViewController: CategoryViewController()
+//            rootViewController: CategoryViewController()
+            rootViewController: TodayNewsCountViewController()
         )
         window?.makeKeyAndVisible()
     }
