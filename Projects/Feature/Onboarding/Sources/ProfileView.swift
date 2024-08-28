@@ -13,37 +13,34 @@ import FlexLayout
 import PinLayout
 
 public final class ProfileView: UIView {
-    let flexContainer = UIView()
+    private let maxNicknameLength = 8
     
-    let titleLabel = {
+    // MARK: - Components
+    
+    private let flexContainer = UIView()
+    
+    private let titleLabel = {
         let label = UILabel()
         label.text = "프로필을 설정해주세요"
         label.font = Fonts.bold(size: 24.0)
         return label
     }()
     
-    let subTitleLabel = {
+    private let subTitleLabel = {
         let label = UILabel()
-        label.text = "* 닉네임은 한/영/숫자 상관없이 8자 이내"
-        label.textColor = Colors.gray02
+        label.text = "* 닉네임은 한/영/숫자/이모티콘 상관없이 8자 이내\n(공백 사용 불가)"
         label.font = Fonts.regular(size: 14.0)
+        label.textColor = Colors.gray02
         label.numberOfLines = 0
         return label
     }()
     
-    let usernameTextField = {
-        let textField = UITextField()
-        textField.placeholder = "닉네임"
-        textField.font = Fonts.semiBold(size: 16.0)
-        textField.borderStyle = .roundedRect
-        textField.backgroundColor = Colors.background
-        textField.autocapitalizationType = .none
-        textField.autocorrectionType = .no
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
-        textField.leftView = paddingView
-        textField.leftViewMode = .always
-        return textField
-    }()
+    lazy var nicknameTextField = NewsHabitInputField(
+        maxLength: maxNicknameLength,
+        placeholder: "닉네임"
+    )
+    
+    // MARK: - Init
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,6 +54,8 @@ public final class ProfileView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Layout
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -66,15 +65,14 @@ public final class ProfileView: UIView {
     
     private func setupLayout() {
         addSubview(flexContainer)
-        
-        flexContainer.flex.padding(20).define { flex in
+        flexContainer.flex.paddingHorizontal(20).define { flex in
             flex.addItem(titleLabel)
             
             flex.addItem(subTitleLabel)
-                .marginTop(25)
+                .marginTop(40)
             
-            flex.addItem(usernameTextField)
-                .marginTop(10)
+            flex.addItem(nicknameTextField)
+                .marginTop(20)
                 .height(44)
         }
     }
