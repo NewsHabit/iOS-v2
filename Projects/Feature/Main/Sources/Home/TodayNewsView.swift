@@ -47,6 +47,7 @@ public final class TodayNewsView: UIView {
         tableView.dataSource = self
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -65,7 +66,7 @@ public final class TodayNewsView: UIView {
     
     private func setupLayout() {
         messageContainer.pin
-            .top(15)
+            .top(10)
             .horizontally(15)
             .height(56)
         

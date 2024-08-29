@@ -14,6 +14,8 @@ public final class HomeViewController: BaseViewController<HomeView> {
         super.viewDidLoad()
         
         setupNavigationBar()
+        
+        let date = Date()
     }
     
     private func setupNavigationBar() {

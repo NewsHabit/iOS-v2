@@ -25,15 +25,17 @@ public final class HomeView: UIView {
     
     private lazy var monthlyRecordLabel = createLabel(with: "이달의 기록")
     
-    private let separator = {
+    private let separatorView = {
         let view = UIView()
         view.backgroundColor = Colors.gray02
         return view
     }()
     
-    private let indicator = {
+    private let indicatorView = {
         let view = UIView()
         view.backgroundColor = Colors.gray08
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -102,15 +104,16 @@ public final class HomeView: UIView {
                     flex.addItem(monthlyRecordLabel)
                 }
             
-            flex.addItem(separator)
+            flex.addItem(separatorView)
                 .height(1)
-                .marginTop(10)
+                .marginTop(13)
             
             flex.addItem(scrollView)
+                .marginTop(5)
                 .grow(1)
         }
         
-        addSubview(indicator)
+        addSubview(indicatorView)
         [todayNewsView, monthlyRecordView].forEach { scrollView.addSubview($0) }
         
         setupConstraints()
@@ -121,10 +124,10 @@ public final class HomeView: UIView {
         let frameView = scrollView.frameLayoutGuide
         
         NSLayoutConstraint.activate([
-            indicator.widthAnchor.constraint(equalTo: todayNewsLabel.widthAnchor),
-            indicator.heightAnchor.constraint(equalToConstant: 3),
-            indicator.centerXAnchor.constraint(equalTo: todayNewsLabel.centerXAnchor),
-            indicator.centerYAnchor.constraint(equalTo: separator.centerYAnchor),
+            indicatorView.widthAnchor.constraint(equalTo: todayNewsLabel.widthAnchor),
+            indicatorView.heightAnchor.constraint(equalToConstant: 2),
+            indicatorView.centerXAnchor.constraint(equalTo: todayNewsLabel.centerXAnchor),
+            indicatorView.bottomAnchor.constraint(equalTo: separatorView.topAnchor),
             
             todayNewsView.widthAnchor.constraint(equalTo: frameView.widthAnchor),
             todayNewsView.heightAnchor.constraint(equalTo: frameView.heightAnchor),
@@ -169,7 +172,7 @@ public final class HomeView: UIView {
     }
     
     private func moveIndicator(to label: UILabel) {
-        indicator.center.x = label.convert(label.bounds, to: self).midX
+        indicatorView.center.x = label.convert(label.bounds, to: self).midX
     }
 }
 
