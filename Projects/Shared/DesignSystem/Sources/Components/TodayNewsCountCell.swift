@@ -41,19 +41,17 @@ public final class TodayNewsCountCell: UITableViewCell, Reusable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupCell() {
-        selectionStyle = .none
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(selectImageView)
-    }
-    
-    // MARK: - Layout
-    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
         titleLabel.pin.start(10).vCenter().sizeToFit()
         selectImageView.pin.size(20).end(10).vCenter()
+    }
+    
+    private func setupCell() {
+        selectionStyle = .none
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(selectImageView)
     }
     
     // MARK: - Configure
