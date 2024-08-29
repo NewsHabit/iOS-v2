@@ -15,12 +15,42 @@ import PinLayout
 final class TodayNewsCell: UITableViewCell, Reusable {
     // MARK: - Components
     
+    private let titleView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        return stackView
+    }()
+    
+    private let readStateView = {
+        let view = UIView()
+        view.backgroundColor = Colors.accent
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 3
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let titleLabel = {
         let label = UILabel()
-        label.text = "기사 제목"
+        label.text = "기사 제목 기사 제목 기사 제목 기사 제목 기사 제목"
         label.font = Fonts.semiBold(size: 14.5)
         label.textColor = Colors.gray08
         label.lineBreakMode = .byTruncatingTail
+        return label
+    }()
+    
+    private let categoryLabel = {
+        let label = UILabel()
+        label.text = "카테고리"
+        label.textColor = Colors.gray01
+        label.textAlignment = .center
+        label.font = Fonts.bold(size: 10.0)
+        label.backgroundColor = Colors.primary
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 9
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -78,7 +108,8 @@ final class TodayNewsCell: UITableViewCell, Reusable {
                             .justifyContent(.spaceBetween)
                             .shrink(1)
                             .define { flex in
-                                flex.addItem(titleLabel)
+                                flex.addItem(titleView)
+                                    .height(20)
                                 flex.addItem(descriptionLabel)
                             }
                         
@@ -88,5 +119,17 @@ final class TodayNewsCell: UITableViewCell, Reusable {
                     }
                 
             }
+        
+        [readStateView, titleLabel, categoryLabel].forEach { titleView.addArrangedSubview($0) }
+    
+        NSLayoutConstraint.activate([
+            readStateView.widthAnchor.constraint(equalToConstant: 6),
+            readStateView.heightAnchor.constraint(equalToConstant: 6),
+            
+            categoryLabel.widthAnchor.constraint(equalToConstant: 50),
+            categoryLabel.heightAnchor.constraint(equalToConstant: 18)
+        ])
+        
+        layoutIfNeeded()
     }
 }
