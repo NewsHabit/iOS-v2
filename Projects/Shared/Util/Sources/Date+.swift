@@ -8,7 +8,7 @@
 import Foundation
 
 private enum DateFormat {
-    static let fullDateTime = "yyyy년 M월 d일 HH:mm"
+    static let fullDateTime = "yyyy년 M월 d일 HH:00"
     static let shortDate = "yyMMdd"
     static let timeWithPeriod = "hh:mm a"
     static let shortYearMonth = "yyMM"
