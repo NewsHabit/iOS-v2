@@ -13,6 +13,10 @@ import FlexLayout
 import PinLayout
 
 public final class HomeView: UIView {
+    private enum HomeTab: Int {
+        case todayNews
+        case monthlyRecord
+    }
     // MARK: - Components
     
     private let flexContainer = UIView()
@@ -154,12 +158,12 @@ public final class HomeView: UIView {
     }
     
     private func updateTabUI(for label: UILabel) {
-        let index = label == todayNewsLabel ? 0 : 1
-        let contentOffset = CGPoint(x: CGFloat(index) * scrollView.frame.width, y: 0)
+        let selectedTab: HomeTab = label == todayNewsLabel ? .todayNews : .monthlyRecord
+        let offset = CGPoint(x: CGFloat(selectedTab.rawValue) * scrollView.frame.width, y: 0)
         
         UIView.animate(withDuration: 0.3) {
             self.moveIndicator(to: label)
-            self.scrollView.setContentOffset(contentOffset, animated: false)
+            self.scrollView.setContentOffset(offset, animated: false)
             self.layoutIfNeeded()
         }
     }
