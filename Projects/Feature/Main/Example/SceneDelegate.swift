@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = UINavigationController(
 //            rootViewController: HomeViewController()
-            rootViewController: HotViewController()
+//            rootViewController: HotViewController()
+            rootViewController: NewsViewController(url: URL(string: "https://www.google.com"))
         )
         window?.makeKeyAndVisible()
     }
