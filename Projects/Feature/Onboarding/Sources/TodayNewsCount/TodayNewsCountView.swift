@@ -41,7 +41,6 @@ public final class TodayNewsCountView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = Colors.background
         setupLayout()
     }
     
