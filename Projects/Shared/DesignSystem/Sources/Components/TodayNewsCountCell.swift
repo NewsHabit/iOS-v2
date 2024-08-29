@@ -44,14 +44,25 @@ public final class TodayNewsCountCell: UITableViewCell, Reusable {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
-        titleLabel.pin.start(10).vCenter().sizeToFit()
-        selectImageView.pin.size(20).end(10).vCenter()
+        setupLayout()
     }
     
     private func setupCell() {
         selectionStyle = .none
         contentView.addSubview(titleLabel)
         contentView.addSubview(selectImageView)
+    }
+    
+    private func setupLayout() {
+        titleLabel.pin
+            .left(10)
+            .vCenter()
+            .sizeToFit()
+        
+        selectImageView.pin
+            .size(20)
+            .right(10)
+            .vCenter()
     }
     
     // MARK: - Configure

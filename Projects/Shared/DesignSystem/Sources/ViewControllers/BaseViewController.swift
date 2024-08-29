@@ -46,7 +46,7 @@ open class BaseViewController<View: UIView>: UIViewController, NavigationBarConf
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        setupLayout()
+        layoutViews()
     }
 
     // MARK: - Setup Methods
@@ -61,7 +61,7 @@ open class BaseViewController<View: UIView>: UIViewController, NavigationBarConf
             .forEach { navigationBar.addSubview($0) }
     }
 
-    private func setupLayout() {
+    private func layoutViews() {
         navigationBar.pin
             .top(view.safeAreaInsets.top)
             .horizontally()

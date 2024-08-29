@@ -19,23 +19,9 @@ public final class HomeView: UIView {
     
     private let flexContainer = UIView()
     
-    private let todayNewsLabel = {
-        let label = UILabel()
-        label.text = "오늘의 뉴스"
-        label.font = Fonts.bold(size: 16.0)
-        label.textColor = Colors.gray08
-        label.isUserInteractionEnabled = true
-        return label
-    }()
+    private lazy var todayNewsLabel = createLabel(with: "오늘의 뉴스")
     
-    private let monthlyRecordLabel = {
-        let label = UILabel()
-        label.text = "이달의 기록"
-        label.font = Fonts.bold(size: 16.0)
-        label.textColor = Colors.gray08
-        label.isUserInteractionEnabled = true
-        return label
-    }()
+    private lazy var monthlyRecordLabel = createLabel(with: "이달의 기록")
     
     private let separator = {
         let view = UIView()
@@ -49,6 +35,8 @@ public final class HomeView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    let todayNewsView = TodayNewsView()
     
     // MARK: - Init
     
@@ -95,9 +83,11 @@ public final class HomeView: UIView {
                 }
             
             flex.addItem(separator)
-                .width(100%)
                 .height(1)
                 .marginTop(10)
+            
+            flex.addItem(todayNewsView)
+                .grow(1)
         }
         
         addSubview(indicator)
@@ -146,5 +136,16 @@ public final class HomeView: UIView {
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         }
+    }
+}
+
+private extension HomeView {
+    func createLabel(with text: String?) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = Fonts.bold(size: 18.0)
+        label.textColor = Colors.gray08
+        label.isUserInteractionEnabled = true
+        return label
     }
 }
