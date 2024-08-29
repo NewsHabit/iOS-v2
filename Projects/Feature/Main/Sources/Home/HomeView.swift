@@ -13,8 +13,6 @@ import FlexLayout
 import PinLayout
 
 public final class HomeView: UIView {
-    private var indicatorCenterXConstraint: NSLayoutConstraint?
-    
     // MARK: - Components
     
     private let flexContainer = UIView()
@@ -36,7 +34,25 @@ public final class HomeView: UIView {
         return view
     }()
     
-    let todayNewsView = TodayNewsView()
+    private lazy var scrollView = {
+        let view = UIScrollView()
+        view.isPagingEnabled = true
+        view.isScrollEnabled = false
+        view.showsHorizontalScrollIndicator = false
+        return view
+    }()
+    
+    let todayNewsView = {
+        let view = TodayNewsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let monthlyRecordView = {
+        let view = MonthlyRecordView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     // MARK: - Init
     
@@ -86,56 +102,70 @@ public final class HomeView: UIView {
                 .height(1)
                 .marginTop(10)
             
-            flex.addItem(todayNewsView)
+            flex.addItem(scrollView)
                 .grow(1)
         }
         
         addSubview(indicator)
+        [todayNewsView, monthlyRecordView].forEach { scrollView.addSubview($0) }
+        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
+        let contentView = scrollView.contentLayoutGuide
+        let frameView = scrollView.frameLayoutGuide
+        
         NSLayoutConstraint.activate([
             indicator.widthAnchor.constraint(equalTo: todayNewsLabel.widthAnchor),
             indicator.heightAnchor.constraint(equalToConstant: 3),
-            indicator.centerYAnchor.constraint(equalTo: separator.centerYAnchor)
+            indicator.centerXAnchor.constraint(equalTo: todayNewsLabel.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: separator.centerYAnchor),
+            
+            todayNewsView.widthAnchor.constraint(equalTo: frameView.widthAnchor),
+            todayNewsView.heightAnchor.constraint(equalTo: frameView.heightAnchor),
+            todayNewsView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            todayNewsView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            
+            monthlyRecordView.widthAnchor.constraint(equalTo: frameView.widthAnchor),
+            monthlyRecordView.heightAnchor.constraint(equalTo: frameView.heightAnchor),
+            monthlyRecordView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            monthlyRecordView.leadingAnchor.constraint(equalTo: todayNewsView.trailingAnchor),
+            monthlyRecordView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
-        indicatorCenterXConstraint = indicator.centerXAnchor.constraint(
-            equalTo: todayNewsLabel.centerXAnchor
-        )
-        indicatorCenterXConstraint?.isActive = true
     }
     
     private func setupGestures() {
-        let todayNewsTapGesture = UITapGestureRecognizer(
+        todayNewsLabel.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
-            action: #selector(todayNewsLabelTapped)
-        )
-        todayNewsLabel.addGestureRecognizer(todayNewsTapGesture)
-        
-        let monthlyRecordTapGesture = UITapGestureRecognizer(
+            action: #selector(handleTabLabelTap)
+        ))
+        monthlyRecordLabel.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
-            action: #selector(monthlyRecordLabelTapped)
-        )
-        monthlyRecordLabel.addGestureRecognizer(monthlyRecordTapGesture)
+            action: #selector(handleTabLabelTap)
+        ))
     }
     
     // MARK: - Actions
     
-    @objc private func todayNewsLabelTapped() {
-        moveIndicator(to: todayNewsLabel)
+    @objc private func handleTabLabelTap(_ gesture: UITapGestureRecognizer) {
+        guard let tappedLabel = gesture.view as? UILabel else { return }
+        updateTabUI(for: tappedLabel)
     }
     
-    @objc private func monthlyRecordLabelTapped() {
-        moveIndicator(to: monthlyRecordLabel)
+    private func updateTabUI(for label: UILabel) {
+        let index = label == todayNewsLabel ? 0 : 1
+        let contentOffset = CGPoint(x: CGFloat(index) * scrollView.frame.width, y: 0)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.moveIndicator(to: label)
+            self.scrollView.setContentOffset(contentOffset, animated: false)
+            self.layoutIfNeeded()
+        }
     }
     
     private func moveIndicator(to label: UILabel) {
-        indicatorCenterXConstraint?.isActive = false
-        indicatorCenterXConstraint = indicator.centerXAnchor.constraint(
-            equalTo: label.centerXAnchor
-        )
-        indicatorCenterXConstraint?.isActive = true
-        
-        UIView.animate(withDuration: 0.3) {
-            self.layoutIfNeeded()
-        }
+        indicator.center.x = label.convert(label.bounds, to: self).midX
     }
 }
 
