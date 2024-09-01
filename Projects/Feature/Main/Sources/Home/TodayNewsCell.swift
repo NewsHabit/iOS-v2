@@ -18,7 +18,7 @@ final class TodayNewsCell: UITableViewCell, Reusable {
     private let titleView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 10
+        stackView.spacing = 8
         stackView.alignment = .center
         return stackView
     }()
@@ -27,7 +27,7 @@ final class TodayNewsCell: UITableViewCell, Reusable {
         let view = UIView()
         view.backgroundColor = Colors.accent
         view.clipsToBounds = true
-        view.layer.cornerRadius = 3
+        view.layer.cornerRadius = 4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -123,8 +123,8 @@ final class TodayNewsCell: UITableViewCell, Reusable {
         [readStateView, titleLabel, categoryLabel].forEach { titleView.addArrangedSubview($0) }
     
         NSLayoutConstraint.activate([
-            readStateView.widthAnchor.constraint(equalToConstant: 6),
-            readStateView.heightAnchor.constraint(equalToConstant: 6),
+            readStateView.widthAnchor.constraint(equalToConstant: 8),
+            readStateView.heightAnchor.constraint(equalToConstant: 8),
             
             categoryLabel.widthAnchor.constraint(equalToConstant: 50),
             categoryLabel.heightAnchor.constraint(equalToConstant: 18)
