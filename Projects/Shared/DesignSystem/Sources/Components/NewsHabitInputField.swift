@@ -70,7 +70,7 @@ public final class NewsHabitInputField: UIView {
         
         super.init(frame: .zero)
         
-        setUpLayout()
+        setupLayout()
         setUpTextField(placeholder: placeholder)
     }
     
@@ -79,8 +79,6 @@ public final class NewsHabitInputField: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Layout
-    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -88,7 +86,9 @@ public final class NewsHabitInputField: UIView {
         flexContainer.flex.layout()
     }
     
-    private func setUpLayout() {
+    // MARK: - Setup Methods
+    
+    private func setupLayout() {
         addSubview(flexContainer)
         flexContainer.flex.define { flex in
             flex.addItem(textField)
@@ -110,10 +110,8 @@ public final class NewsHabitInputField: UIView {
                 }
         }
     }
-}
-
-private extension NewsHabitInputField {
-    func setUpTextField(placeholder: String?) {
+    
+    private func setUpTextField(placeholder: String?) {
         textField.placeholder = placeholder
         textField.addTarget(
             self,
@@ -122,12 +120,12 @@ private extension NewsHabitInputField {
         )
     }
     
-    @objc func handleTextFieldEditingChanged(_ textField: UITextField) {
+    @objc private func handleTextFieldEditingChanged(_ textField: UITextField) {
         guard let text = textField.text else { return }
         validate(text: text)
     }
     
-    func validate(text: String) {
+    private func validate(text: String) {
         let currentLength = text.count
         let isLengthValid = currentLength <= maxLength && currentLength > 0
         let isSpace = text.contains(" ")
@@ -140,12 +138,12 @@ private extension NewsHabitInputField {
         alertLabel.isHidden = isValid
     }
     
-    func updateLengthIndicator(currentLength: Int, isValid: Bool) {
+    private func updateLengthIndicator(currentLength: Int, isValid: Bool) {
         lengthIndicatorLabel.text = "\(currentLength)/\(maxLength)"
         lengthIndicatorLabel.textColor = isValid ? Colors.gray04 : Colors.accent
     }
     
-    func updateAlertLabel(isLengthValid: Bool, containsSpace: Bool) {
+    private func updateAlertLabel(isLengthValid: Bool, containsSpace: Bool) {
         if !isLengthValid {
             alertLabel.text = "1~\(maxLength)자의 닉네임을 사용해주세요"
         } else if containsSpace {

@@ -50,7 +50,6 @@ public final class CategoryView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = Colors.background
         setupLayout()
     }
     
@@ -58,8 +57,6 @@ public final class CategoryView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Layout
     
     public override func layoutSubviews() {
         super.layoutSubviews()

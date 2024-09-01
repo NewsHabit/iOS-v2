@@ -34,18 +34,16 @@ public final class CategoryCell: UICollectionViewCell, Reusable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupCell() {
-        clipsToBounds = true
-        contentView.addSubview(nameLabel)
-    }
-    
-    // MARK: - Layout
-    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
         nameLabel.pin.center().sizeToFit()
         layer.cornerRadius = contentView.frame.height / 2
+    }
+    
+    private func setupCell() {
+        clipsToBounds = true
+        contentView.addSubview(nameLabel)
     }
     
     // MARK: - Configure

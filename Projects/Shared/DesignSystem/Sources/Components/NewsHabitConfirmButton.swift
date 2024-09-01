@@ -28,7 +28,7 @@ public final class NewsHabitConfirmButton: UIButton {
         super.init(coder: coder)
     }
     
-    // MARK: - Setup
+    // MARK: - Setup Methods
     
     private func setupButton(title: String) {
         tintColor = .white
