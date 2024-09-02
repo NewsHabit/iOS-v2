@@ -39,6 +39,6 @@ public final class NewsHabitConfirmButton: UIButton {
     }
     
     private func updateAppearance() {
-        backgroundColor = isEnabled ? Colors.primary : Colors.disabled
+        backgroundColor = isEnabled ? Colors.gray08 : Colors.disabled
     }
 }
