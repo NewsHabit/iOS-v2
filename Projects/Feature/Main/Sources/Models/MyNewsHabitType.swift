@@ -9,12 +9,12 @@ import Foundation
 
 public enum MyNewsHabitType: CaseIterable {
     case category
-    case todayNewsCount
+    case dailyNewsCount
     
     var title: String {
         switch self {
         case .category:         "카테고리"
-        case .todayNewsCount:   "오늘의 뉴스 개수"
+        case .dailyNewsCount:   "오늘의 뉴스 개수"
         }
     }
 }

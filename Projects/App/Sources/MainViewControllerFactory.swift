@@ -7,10 +7,15 @@
 
 import UIKit
 
+import Core
 import Feature
 
 class MainViewControllerFactory: ViewControllerFactory {
-    private let mainFeatureFactory = MainFeatureFactory()
+    private let mainFeatureFactory: MainFeatureFactory
+    
+    init(localStorage: LocalStorageProtocol) {
+        self.mainFeatureFactory = MainFeatureFactory(localStorage: localStorage)
+    }
     
     func makeHomeViewController() -> UIViewController {
         return mainFeatureFactory.makeHomeViewController()

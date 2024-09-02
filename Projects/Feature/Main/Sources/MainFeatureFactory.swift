@@ -7,8 +7,14 @@
 
 import UIKit
 
+import Core
+
 public class MainFeatureFactory {
-    public init() {}
+    private let localStorage: LocalStorageProtocol
+    
+    public init(localStorage: LocalStorageProtocol) {
+        self.localStorage = localStorage
+    }
     
     public func makeHomeViewController() -> UIViewController {
         return HomeViewController()

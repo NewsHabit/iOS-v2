@@ -1,5 +1,5 @@
 //
-//  TodayNewsCountCell.swift
+//  DailyNewsCountCell.swift
 //  SharedDesignSystem
 //
 //  Created by 지연 on 8/29/24.
@@ -11,7 +11,7 @@ import SharedUtil
 
 import PinLayout
 
-public final class TodayNewsCountCell: UITableViewCell, Reusable {
+public final class DailyNewsCountCell: UITableViewCell, Reusable {
     // MARK: - Components
     
     private let titleLabel = {

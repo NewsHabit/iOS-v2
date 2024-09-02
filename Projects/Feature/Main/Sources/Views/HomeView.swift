@@ -14,14 +14,14 @@ import PinLayout
 
 public final class HomeView: UIView {
     private enum HomeTab: Int {
-        case todayNews
+        case dailyNews
         case monthlyRecord
     }
     // MARK: - Components
     
     private let flexContainer = UIView()
     
-    private lazy var todayNewsLabel = createLabel(with: "오늘의 뉴스")
+    private lazy var dailyNewsLabel = createLabel(with: "오늘의 뉴스")
     
     private lazy var monthlyRecordLabel = createLabel(with: "이달의 기록")
     
@@ -48,8 +48,8 @@ public final class HomeView: UIView {
         return view
     }()
     
-    let todayNewsView = {
-        let view = TodayNewsView()
+    let dailyNewsView = {
+        let view = DailyNewsView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -100,7 +100,7 @@ public final class HomeView: UIView {
                 .marginTop(40)
                 .marginLeft(20)
                 .define { flex in
-                    flex.addItem(todayNewsLabel)
+                    flex.addItem(dailyNewsLabel)
                     flex.addItem(monthlyRecordLabel)
                 }
             
@@ -114,7 +114,7 @@ public final class HomeView: UIView {
         }
         
         addSubview(indicatorView)
-        [todayNewsView, monthlyRecordView].forEach { scrollView.addSubview($0) }
+        [dailyNewsView, monthlyRecordView].forEach { scrollView.addSubview($0) }
         
         setupConstraints()
     }
@@ -124,26 +124,26 @@ public final class HomeView: UIView {
         let frameView = scrollView.frameLayoutGuide
         
         NSLayoutConstraint.activate([
-            indicatorView.widthAnchor.constraint(equalTo: todayNewsLabel.widthAnchor),
+            indicatorView.widthAnchor.constraint(equalTo: dailyNewsLabel.widthAnchor),
             indicatorView.heightAnchor.constraint(equalToConstant: 2),
-            indicatorView.centerXAnchor.constraint(equalTo: todayNewsLabel.centerXAnchor),
+            indicatorView.centerXAnchor.constraint(equalTo: dailyNewsLabel.centerXAnchor),
             indicatorView.bottomAnchor.constraint(equalTo: separatorView.topAnchor),
             
-            todayNewsView.widthAnchor.constraint(equalTo: frameView.widthAnchor),
-            todayNewsView.heightAnchor.constraint(equalTo: frameView.heightAnchor),
-            todayNewsView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            todayNewsView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            dailyNewsView.widthAnchor.constraint(equalTo: frameView.widthAnchor),
+            dailyNewsView.heightAnchor.constraint(equalTo: frameView.heightAnchor),
+            dailyNewsView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            dailyNewsView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             
             monthlyRecordView.widthAnchor.constraint(equalTo: frameView.widthAnchor),
             monthlyRecordView.heightAnchor.constraint(equalTo: frameView.heightAnchor),
             monthlyRecordView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            monthlyRecordView.leadingAnchor.constraint(equalTo: todayNewsView.trailingAnchor),
+            monthlyRecordView.leadingAnchor.constraint(equalTo: dailyNewsView.trailingAnchor),
             monthlyRecordView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
     private func setupGesture() {
-        todayNewsLabel.addGestureRecognizer(UITapGestureRecognizer(
+        dailyNewsLabel.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
             action: #selector(handleTabLabelTap)
         ))
@@ -161,7 +161,7 @@ public final class HomeView: UIView {
     }
     
     private func updateTabUI(for label: UILabel) {
-        let selectedTab: HomeTab = label == todayNewsLabel ? .todayNews : .monthlyRecord
+        let selectedTab: HomeTab = label == dailyNewsLabel ? .dailyNews : .monthlyRecord
         let offset = CGPoint(x: CGFloat(selectedTab.rawValue) * scrollView.frame.width, y: 0)
         
         UIView.animate(withDuration: 0.3) {

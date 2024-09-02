@@ -1,5 +1,5 @@
 //
-//  TodayNewsView.swift
+//  DailyNewsView.swift
 //  FeatureMain
 //
 //  Created by 지연 on 8/29/24.
@@ -11,7 +11,7 @@ import Shared
 
 import PinLayout
 
-public final class TodayNewsView: UIView {
+public final class DailyNewsView: UIView {
     // MARK: - Components
     
     let messageContainer = {
@@ -32,7 +32,7 @@ public final class TodayNewsView: UIView {
     
     let tableView = {
         let tableView = UITableView()
-        tableView.register(cellType: TodayNewsCell.self)
+        tableView.register(cellType: DailyNewsCell.self)
         tableView.rowHeight = 120
         return tableView
     }()
@@ -83,13 +83,13 @@ public final class TodayNewsView: UIView {
     }
 }
 
-extension TodayNewsView: UITableViewDataSource {
+extension DailyNewsView: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(for: indexPath, cellType: TodayNewsCell.self)
+        let cell = tableView.dequeueReusableCell(for: indexPath, cellType: DailyNewsCell.self)
         return cell
     }
 }

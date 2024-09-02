@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = UINavigationController(
             rootViewController: ProfileViewController()
 //            rootViewController: CategoryViewController()
-//            rootViewController: TodayNewsCountViewController()
+//            rootViewController: DailyNewsCountViewController()
         )
         window?.makeKeyAndVisible()
     }
