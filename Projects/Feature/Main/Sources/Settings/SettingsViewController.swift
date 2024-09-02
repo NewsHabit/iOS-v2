@@ -30,12 +30,12 @@ public final class SettingsViewController: BaseViewController<SettingsView> {
 extension SettingsViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         navigationController?.pushViewController(
-            navigationController(for: SettingsType.allCases[indexPath.row]),
+            viewController(for: SettingsType.allCases[indexPath.row]),
             animated: true
         )
     }
     
-    private func navigationController(for settingsType: SettingsType) -> UIViewController {
+    private func viewController(for settingsType: SettingsType) -> UIViewController {
         switch settingsType {
         case .profile:      return ProfileViewController()
         case .myNewsHabit:  return MyNewsHabitViewController()

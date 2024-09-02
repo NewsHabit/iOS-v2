@@ -1,15 +1,15 @@
 //
 //  CategoryViewController.swift
-//  FeatureOnboardingExample
+//  FeatureMain
 //
-//  Created by 지연 on 8/29/24.
+//  Created by 지연 on 9/3/24.
 //
 
 import UIKit
 
 import Shared
 
-public final class CategoryViewController: BaseViewController<CategoryView> {
+public final class CategoryViewController: BottomSheetViewController<CategoryView> {
     private let sizingLabel = {
         let label = UILabel()
         label.font = Fonts.regular(size: 14.0)
@@ -67,6 +67,10 @@ extension CategoryViewController: UICollectionViewDataSource {
 
 private extension CategoryViewController {
     var categoryCollectionView: UICollectionView {
-        contentView.collectionView
+        bottomSheetView.collectionView
+    }
+    
+    var saveButton: NewsHabitConfirmButton {
+        bottomSheetView.saveButton
     }
 }

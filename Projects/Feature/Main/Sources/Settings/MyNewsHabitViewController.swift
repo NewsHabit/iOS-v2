@@ -23,11 +23,23 @@ public final class MyNewsHabitViewController: BaseViewController<MyNewsHabitView
     }
     
     private func setupDelegate() {
-//        contentView.delegate = self
+        contentView.delegate = self
         contentView.dataSource = self
     }
 }
 
+extension MyNewsHabitViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        present(viewController(for: MyNewsHabitType.allCases[indexPath.row]), animated: false)
+    }
+    
+    private func viewController(for myNewsHabitType: MyNewsHabitType) -> UIViewController {
+        switch myNewsHabitType {
+        case .category:         return CategoryViewController(bottomSheetHeight: 400)
+        case .todayNewsCount:   return TodayNewsCountViewController(bottomSheetHeight: 400)
+        }
+    }
+}
 
 extension MyNewsHabitViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -40,7 +40,7 @@ public final class HomeView: UIView {
         return view
     }()
     
-    private lazy var scrollView = {
+    private let scrollView = {
         let view = UIScrollView()
         view.isPagingEnabled = true
         view.isScrollEnabled = false

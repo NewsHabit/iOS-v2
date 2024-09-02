@@ -35,7 +35,7 @@ public final class CategoryView: UIView {
         return label
     }()
     
-    let categoryCollectionView = {
+    let collectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 20
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -73,7 +73,7 @@ public final class CategoryView: UIView {
             flex.addItem(subTitleLabel)
                 .marginTop(20)
             
-            flex.addItem(categoryCollectionView)
+            flex.addItem(collectionView)
                 .marginTop(40)
                 .grow(1)
             

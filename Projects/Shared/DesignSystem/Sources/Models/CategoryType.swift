@@ -1,13 +1,13 @@
 //
-//  Category.swift
-//  FeatureOnboardingExample
+//  CategoryType.swift
+//  SharedDesignSystem
 //
-//  Created by 지연 on 8/29/24.
+//  Created by 지연 on 9/3/24.
 //
 
 import Foundation
 
-public enum Category: CaseIterable {
+public enum CategoryType: CaseIterable {
     case politics
     case economy
     case society
