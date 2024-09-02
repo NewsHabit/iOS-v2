@@ -40,7 +40,7 @@ extension SettingsViewController: UITableViewDelegate {
         case .profile:      return ProfileViewController()
         case .myNewsHabit:  return MyNewsHabitViewController()
         case .notification: return NotificationViewController()
-        case .developer:    return ProfileViewController()
+        case .developer:    return DeveloperViewController()
         }
     }
 }

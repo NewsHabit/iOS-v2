@@ -10,7 +10,7 @@ import WebKit
 
 import Shared
 
-public final class NewsViewController: BaseViewController<NewsView> {
+public final class NewsViewController: BaseViewController<NewsHabitWebView> {
     private var progressObserver: NSKeyValueObservation?
     
     // MARK: - Init

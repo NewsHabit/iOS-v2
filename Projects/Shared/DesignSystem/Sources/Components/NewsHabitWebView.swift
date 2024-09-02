@@ -1,21 +1,19 @@
 //
-//  NewsView.swift
+//  NewsHabitWebView.swift
 //  SharedDesignSystem
 //
-//  Created by 지연 on 8/30/24.
+//  Created by 지연 on 9/3/24.
 //
 
 import UIKit
 import WebKit
 
-import Shared
-
 import PinLayout
 
-public final class NewsView: UIView {
+public final class NewsHabitWebView: UIView {
     // MARK: - Components
     
-    let progressView = {
+    public let progressView = {
         let view = UIProgressView()
         view.progressViewStyle = .bar
         view.tintColor = Colors.gray08
@@ -23,7 +21,7 @@ public final class NewsView: UIView {
         return view
     }()
     
-    let webView = {
+    public let webView = {
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
         let view = WKWebView(frame: .zero, configuration: config)
