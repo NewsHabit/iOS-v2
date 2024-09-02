@@ -31,11 +31,20 @@ open class BottomSheetViewController<View: UIView>: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private let indicator = {
+        let view = UIView()
+        view.backgroundColor = Colors.gray02
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 2
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     // MARK: - init
 
     public init(
-        bottomSheetHeight: CGFloat,
+        bottomSheetHeight: CGFloat = 400.0,
         modalPresentationStyle: UIModalPresentationStyle = .overFullScreen
     ) {
         self.bottomSheetHeight = bottomSheetHeight
@@ -43,8 +52,8 @@ open class BottomSheetViewController<View: UIView>: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         self.modalPresentationStyle = modalPresentationStyle
-        setUpLayout()
-        setUpGestureRecognizer()
+        setupLayout()
+        setupGesture()
     }
 
     @available(*, unavailable)
@@ -76,9 +85,9 @@ open class BottomSheetViewController<View: UIView>: UIViewController {
         }
     }
 
-    // MARK: - set up
+    // MARK: - Setup Methods
 
-    private func setUpLayout() {
+    private func setupLayout() {
         view.addSubview(dimmedView)
         NSLayoutConstraint.activate([
             dimmedView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -98,17 +107,23 @@ open class BottomSheetViewController<View: UIView>: UIViewController {
             bottomSheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomSheetViewBottomConstraint!
         ])
+        
+        bottomSheetView.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.widthAnchor.constraint(equalToConstant: 40),
+            indicator.heightAnchor.constraint(equalToConstant: 4),
+            indicator.topAnchor.constraint(equalTo: bottomSheetView.topAnchor, constant: 10),
+            indicator.centerXAnchor.constraint(equalTo: bottomSheetView.centerXAnchor)
+        ])
     }
 
-    private func setUpGestureRecognizer() {
-        // TapGesture
+    private func setupGesture() {
         let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(dimmedViewDidTap)
         )
         dimmedView.addGestureRecognizer(tapGesture)
 
-        // SwipeGesture
         let swipeGesture = UISwipeGestureRecognizer(
             target: self,
             action: #selector(didSwipeDown)
