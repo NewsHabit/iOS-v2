@@ -1,6 +1,6 @@
 //
 //  DailyNewsCountType.swift
-//  SharedDesignSystem
+//  SharedUtil
 //
 //  Created by 지연 on 9/3/24.
 //
