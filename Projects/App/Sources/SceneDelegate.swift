@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Core
 import Feature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -19,7 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = MainTabBarController(factory: MainViewControllerFactory())
+        
+        let mainViewControllerFactory = MainViewControllerFactory(
+            localStorage: LocalStorageService()
+        )
+        window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+        
         window?.makeKeyAndVisible()
     }
 
