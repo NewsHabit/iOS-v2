@@ -26,9 +26,10 @@ public final class TodayNewsCountView: UIView {
         return label
     }()
     
-    let todayNewsCountTableView = {
+    let tableView = {
         let tableView = UITableView()
         tableView.register(cellType: TodayNewsCountCell.self)
+        tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.rowHeight = 50
         return tableView
@@ -61,7 +62,7 @@ public final class TodayNewsCountView: UIView {
         flexContainer.flex.paddingHorizontal(20).define { flex in
             flex.addItem(titleLabel)
             
-            flex.addItem(todayNewsCountTableView)
+            flex.addItem(tableView)
                 .marginTop(40)
                 .grow(1)
             

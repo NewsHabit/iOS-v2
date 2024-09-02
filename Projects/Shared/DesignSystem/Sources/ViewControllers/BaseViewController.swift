@@ -25,7 +25,7 @@ protocol ViewControllerConfigurable {
 
 // MARK: - BaseViewController
 
-open class BaseViewController<View: UIView>: UIViewController, NavigationBarConfigurable, ViewControllerConfigurable {
+open class BaseViewController<View: UIView>: UIViewController, NavigationBarConfigurable, ViewControllerConfigurable, UIGestureRecognizerDelegate {
     private let navigationBar = UIView()
     public let contentView = View()
 
@@ -53,6 +53,8 @@ open class BaseViewController<View: UIView>: UIViewController, NavigationBarConf
 
     private func setupViewController() {
         navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         view.backgroundColor = Colors.background
         
         [navigationBar, contentView]

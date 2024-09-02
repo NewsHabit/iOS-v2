@@ -49,6 +49,7 @@ public final class TodayNewsCountCell: UITableViewCell, Reusable {
     
     private func setupCell() {
         selectionStyle = .none
+        backgroundColor = .clear
         contentView.addSubview(titleLabel)
         contentView.addSubview(selectImageView)
     }

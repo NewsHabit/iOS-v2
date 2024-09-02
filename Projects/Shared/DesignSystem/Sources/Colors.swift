@@ -10,6 +10,7 @@ import UIKit
 public struct Colors {
     public static let accent = SharedDesignSystemAsset.accent.color
     public static let background = SharedDesignSystemAsset.background.color
+    public static let dim = SharedDesignSystemAsset.dim.color
     public static let disabled = SharedDesignSystemAsset.disabled.color
     public static let gray01 = SharedDesignSystemAsset.gray01.color
     public static let gray02 = SharedDesignSystemAsset.gray02.color

@@ -1,18 +1,22 @@
 //
 //  TodayNewsCountViewController.swift
-//  FeatureOnboardingInterface
+//  FeatureMain
 //
-//  Created by 지연 on 8/29/24.
+//  Created by 지연 on 9/3/24.
 //
 
 import UIKit
 
 import Shared
 
-public final class TodayNewsCountViewController:BaseViewController<TodayNewsCountView> {
+public final class TodayNewsCountViewController: BottomSheetViewController<TodayNewsCountView> {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupDelegate()
+    }
+    
+    private func setupDelegate() {
         todayNewsCountTableView.dataSource = self
     }
 }
@@ -32,10 +36,10 @@ extension TodayNewsCountViewController: UITableViewDataSource {
 
 private extension TodayNewsCountViewController {
     var todayNewsCountTableView: UITableView {
-        contentView.tableView
+        bottomSheetView.tableView
     }
     
-    var doneButton: NewsHabitConfirmButton {
-        contentView.doneButton
+    var saveButton: NewsHabitConfirmButton {
+        bottomSheetView.saveButton
     }
 }
