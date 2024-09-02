@@ -1,5 +1,5 @@
 //
-//  TodayNewsCountView.swift
+//  DailyNewsCountView.swift
 //  FeatureMain
 //
 //  Created by 지연 on 9/3/24.
@@ -12,7 +12,7 @@ import Shared
 import FlexLayout
 import PinLayout
 
-public final class TodayNewsCountView: UIView {
+public final class DailyNewsCountView: UIView {
     // MARK: - Components
     
     private let flexContainer = UIView()
@@ -37,7 +37,7 @@ public final class TodayNewsCountView: UIView {
     
     let tableView = {
         let tableView = UITableView()
-        tableView.register(cellType: TodayNewsCountCell.self)
+        tableView.register(cellType: DailyNewsCountCell.self)
         tableView.separatorStyle = .none
         tableView.rowHeight = 50
         tableView.backgroundColor = .clear

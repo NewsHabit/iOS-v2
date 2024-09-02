@@ -1,5 +1,5 @@
 //
-//  TodayNewsCell.swift
+//  DailyNewsCell.swift
 //  FeatureMain
 //
 //  Created by 지연 on 8/29/24.
@@ -12,7 +12,7 @@ import Shared
 import FlexLayout
 import PinLayout
 
-final class TodayNewsCell: UITableViewCell, Reusable {
+final class DailyNewsCell: UITableViewCell, Reusable {
     // MARK: - Components
     
     private let titleView = {
