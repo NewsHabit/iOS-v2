@@ -10,18 +10,17 @@ import UIKit
 import Feature
 
 class MainViewControllerFactory: ViewControllerFactory {
+    private let mainFeatureFactory = MainFeatureFactory()
+    
     func makeHomeViewController() -> UIViewController {
-        let homeFeature = HomeFeature()
-        return homeFeature.makeHomeViewController()
+        return mainFeatureFactory.makeHomeViewController()
     }
     
     func makeHotViewController() -> UIViewController {
-        let hotFeature = HotFeature()
-        return hotFeature.makeHotViewController()
+        return mainFeatureFactory.makeHotViewController()
     }
     
     func makeSettingsViewController() -> UIViewController {
-        let settingsFeature = SettingsFeature()
-        return settingsFeature.makeSettingsViewController()
+        return mainFeatureFactory.makeSettingsViewController()
     }
 }
