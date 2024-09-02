@@ -38,7 +38,7 @@ extension SettingsViewController: UITableViewDelegate {
     private func navigationController(for settingsType: SettingsType) -> UIViewController {
         switch settingsType {
         case .profile:      return ProfileViewController()
-        case .myNewsHabit:  return ProfileViewController()
+        case .myNewsHabit:  return MyNewsHabitViewController()
         case .notification: return ProfileViewController()
         case .developer:    return ProfileViewController()
         }
