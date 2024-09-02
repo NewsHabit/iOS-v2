@@ -24,6 +24,7 @@ public final class MyNewsHabitView: UITableView {
     private func setupView() {
         separatorStyle = .none
         rowHeight = 56
+        backgroundColor = .clear
         contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         register(cellType: MyNewsHabitCell.self)
     }

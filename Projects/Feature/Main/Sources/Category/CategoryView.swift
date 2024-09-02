@@ -38,6 +38,7 @@ public final class CategoryView: UIView {
         layout.minimumInteritemSpacing = 20
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(cellType: CategoryCell.self)
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     

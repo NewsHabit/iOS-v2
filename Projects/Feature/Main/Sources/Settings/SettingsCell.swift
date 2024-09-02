@@ -56,6 +56,7 @@ public final class SettingsCell: UITableViewCell, Reusable {
     
     private func setupCell() {
         selectionStyle = .none
+        backgroundColor = .clear
         contentView.addSubview(iconImageView)
         contentView.addSubview(titleLabel)
     }

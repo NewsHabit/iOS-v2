@@ -22,6 +22,7 @@ public final class SettingsView: UITableView {
     }
     
     private func setupView() {
+        backgroundColor = .clear
         separatorStyle = .none
         rowHeight = 56
         register(cellType: SettingsCell.self)

@@ -40,6 +40,7 @@ public final class TodayNewsCountView: UIView {
         tableView.register(cellType: TodayNewsCountCell.self)
         tableView.separatorStyle = .none
         tableView.rowHeight = 50
+        tableView.backgroundColor = .clear
         return tableView
     }()
     

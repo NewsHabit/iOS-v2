@@ -69,6 +69,7 @@ public final class MyNewsHabitCell: UITableViewCell, Reusable {
     
     private func setupCell() {
         selectionStyle = .none
+        backgroundColor = .clear
         contentView.addSubview(titleLabel)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(chevronImageView)

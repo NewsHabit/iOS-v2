@@ -29,6 +29,7 @@ public final class TodayNewsCountView: UIView {
     let tableView = {
         let tableView = UITableView()
         tableView.register(cellType: TodayNewsCountCell.self)
+        tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.rowHeight = 50
         return tableView
