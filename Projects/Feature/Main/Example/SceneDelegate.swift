@@ -23,8 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //            rootViewController: HomeViewController()
 //            rootViewController: HotViewController()
 //            rootViewController: NewsViewController(url: URL(string: "https://www.google.com"))
-//            rootViewController: SettingsViewController()
-            rootViewController: MyNewsHabitViewController()
+            rootViewController: SettingsViewController()
+//            rootViewController: MyNewsHabitViewController()
         )
         window?.makeKeyAndVisible()
     }

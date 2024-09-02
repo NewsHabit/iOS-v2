@@ -39,7 +39,7 @@ extension SettingsViewController: UITableViewDelegate {
         switch settingsType {
         case .profile:      return ProfileViewController()
         case .myNewsHabit:  return MyNewsHabitViewController()
-        case .notification: return ProfileViewController()
+        case .notification: return NotificationViewController()
         case .developer:    return ProfileViewController()
         }
     }

@@ -67,7 +67,7 @@ public final class HomeView: UIView {
         
         setupView()
         setupLayout()
-        setupGestures()
+        setupGesture()
     }
     
     @available(*, unavailable)
@@ -142,7 +142,7 @@ public final class HomeView: UIView {
         ])
     }
     
-    private func setupGestures() {
+    private func setupGesture() {
         todayNewsLabel.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
             action: #selector(handleTabLabelTap)

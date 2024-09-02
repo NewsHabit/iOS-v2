@@ -35,8 +35,8 @@ extension MyNewsHabitViewController: UITableViewDelegate {
     
     private func viewController(for myNewsHabitType: MyNewsHabitType) -> UIViewController {
         switch myNewsHabitType {
-        case .category:         return CategoryViewController(bottomSheetHeight: 400)
-        case .todayNewsCount:   return TodayNewsCountViewController(bottomSheetHeight: 400)
+        case .category:         return CategoryViewController()
+        case .todayNewsCount:   return TodayNewsCountViewController()
         }
     }
 }
