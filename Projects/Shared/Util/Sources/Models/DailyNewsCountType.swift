@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum DailyNewsCountType: Int, CaseIterable {
+public enum DailyNewsCountType: Int, Codable, CaseIterable {
     case three = 3
     case four = 4
     case five = 5

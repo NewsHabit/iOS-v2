@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CategoryType: CaseIterable {
+public enum CategoryType: Codable, CaseIterable {
     case politics
     case economy
     case society
