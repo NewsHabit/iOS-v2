@@ -22,7 +22,26 @@ public final class SettingsViewController: BaseViewController<SettingsView> {
     }
     
     private func setupDelegate() {
+        contentView.delegate = self
         contentView.dataSource = self
+    }
+}
+
+extension SettingsViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationController?.pushViewController(
+            navigationController(for: SettingsType.allCases[indexPath.row]),
+            animated: true
+        )
+    }
+    
+    private func navigationController(for settingsType: SettingsType) -> UIViewController {
+        switch settingsType {
+        case .profile:      return ProfileViewController()
+        case .myNewsHabit:  return ProfileViewController()
+        case .notification: return ProfileViewController()
+        case .developer:    return ProfileViewController()
+        }
     }
 }
 
