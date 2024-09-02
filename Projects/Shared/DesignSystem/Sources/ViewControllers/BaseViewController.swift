@@ -99,7 +99,7 @@ open class BaseViewController<View: UIView>: UIViewController, NavigationBarConf
         contentView.pin
             .below(of: navigationBar)
             .horizontally()
-            .bottom()
+            .bottom(tabBarController?.tabBar.frame.height ?? 0)
     }
 
     // MARK: - NavigationBarConfigurable
