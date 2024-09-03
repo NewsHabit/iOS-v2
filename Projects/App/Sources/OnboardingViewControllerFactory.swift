@@ -11,20 +11,17 @@ import Core
 import Feature
 
 class OnboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol {
-    private let localStorage: LocalStorageProtocol
-    private var onboardingFeatureFactory: OnboardingFeatureFactory?
+    private let onboardingFeatureFactory: OnboardingFeatureFactory
+    private var coordinator: OnboardingCoordinator?
     
     init(localStorage: LocalStorageProtocol) {
-        self.localStorage = localStorage
+        self.onboardingFeatureFactory = OnboardingFeatureFactory(localStorage: localStorage)
     }
     
     func makeOnboardingViewController() -> UIViewController {
         let navigationController = UINavigationController()
-        onboardingFeatureFactory = OnboardingFeatureFactory(
-            navigationController: navigationController,
-            localStorage: localStorage
-        )
-        onboardingFeatureFactory?.start()
+        coordinator = onboardingFeatureFactory.makeOnboardingCoordinator(navigationController: navigationController)
+        coordinator?.start()
         return navigationController
     }
 }
