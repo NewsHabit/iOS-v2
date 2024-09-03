@@ -12,6 +12,7 @@ import Feature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    var onboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol?
 
     func scene(
         _ scene: UIScene,
@@ -21,11 +22,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let mainViewControllerFactory = MainViewControllerFactory(
-            localStorage: LocalStorageService()
-        )
-        window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+        let localStorage = LocalStorageService()
+        let rootViewController: UIViewController?
         
+        if localStorage.appState.isOnboardingCompleted {
+            let mainViewControllerFactory = MainViewControllerFactory(
+                localStorage: localStorage
+            )
+            rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+        } else {
+            onboardingViewControllerFactory = OnboardingViewControllerFactory(
+                localStorage: localStorage
+            )
+            rootViewController = onboardingViewControllerFactory?.makeOnboardingViewController()
+        }
+        
+        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
     }
 

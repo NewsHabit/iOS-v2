@@ -25,11 +25,11 @@ public final class MainTabBarController: UITabBarController {
         }
     }
     
-    private let factory: ViewControllerFactory
+    private let factory: MainViewControllerFactoryProtocol
     
     // MARK: - Init
     
-    public init(factory: ViewControllerFactory) {
+    public init(factory: MainViewControllerFactoryProtocol) {
         self.factory = factory
         
         super.init(nibName: nil, bundle: nil)

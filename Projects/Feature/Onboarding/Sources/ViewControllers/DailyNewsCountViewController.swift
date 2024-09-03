@@ -1,19 +1,35 @@
 //
 //  DailyNewsCountViewController.swift
-//  FeatureOnboardingInterface
+//  FeatureOnboarding
 //
 //  Created by 지연 on 8/29/24.
 //
 
 import UIKit
 
+import FeatureOnboardingInterface
 import Shared
 
 public final class DailyNewsCountViewController:BaseViewController<DailyNewsCountView> {
+    public weak var delegate: DailyNewsCountViewControllerDelegate?
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupDelegate()
+        setupAction()
+    }
+    
+    private func setupDelegate() {
         dailyNewsCountTableView.dataSource = self
+    }
+    
+    private func setupAction() {
+        doneButton.addTarget(self, action: #selector(handleDoneButtonTap), for: .touchUpInside)
+    }
+    
+    @objc private func handleDoneButtonTap() {
+        delegate?.dailyNewsCountViewControllerDidFinish()
     }
 }
 

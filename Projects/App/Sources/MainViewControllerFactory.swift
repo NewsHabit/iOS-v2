@@ -10,7 +10,7 @@ import UIKit
 import Core
 import Feature
 
-class MainViewControllerFactory: ViewControllerFactory {
+class MainViewControllerFactory: MainViewControllerFactoryProtocol {
     private let mainFeatureFactory: MainFeatureFactory
     
     init(localStorage: LocalStorageProtocol) {
