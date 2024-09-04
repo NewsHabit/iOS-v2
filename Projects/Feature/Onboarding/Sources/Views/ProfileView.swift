@@ -19,6 +19,8 @@ public final class ProfileView: UIView {
     
     private let flexContainer = UIView()
     
+    private let progressBar = OnboardingProgressBar(onboardingType: .profile)
+    
     private let titleLabel = {
         let label = UILabel()
         label.text = "프로필을 설정해주세요"
@@ -66,7 +68,11 @@ public final class ProfileView: UIView {
     private func setupLayout() {
         addSubview(flexContainer)
         flexContainer.flex.paddingHorizontal(20).define { flex in
+            flex.addItem(progressBar)
+                .height(4)
+            
             flex.addItem(titleLabel)
+                .marginTop(40)
             
             flex.addItem(subTitleLabel)
                 .marginTop(40)

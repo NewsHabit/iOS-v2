@@ -17,6 +17,8 @@ public final class DailyNewsCountView: UIView {
     
     private let flexContainer = UIView()
     
+    private let progressBar = OnboardingProgressBar(onboardingType: .dailyNewsCount)
+    
     private let titleLabel = {
         let label = UILabel()
         label.text = "추천받고 싶은 기사의 개수를\n선택해주세요"
@@ -60,7 +62,11 @@ public final class DailyNewsCountView: UIView {
     private func setupLayout() {
         addSubview(flexContainer)
         flexContainer.flex.paddingHorizontal(20).define { flex in
+            flex.addItem(progressBar)
+                .height(4)
+            
             flex.addItem(titleLabel)
+                .marginTop(40)
             
             flex.addItem(tableView)
                 .marginTop(40)

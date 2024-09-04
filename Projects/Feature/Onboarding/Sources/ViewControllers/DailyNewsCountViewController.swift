@@ -32,17 +32,12 @@ public final class DailyNewsCountViewController:BaseViewController<DailyNewsCoun
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationBar()
         setupDelegate()
         setupAction()
         setupBinding()
     }
     
     // MARK: - Setup Methods
-    
-    private func setupNavigationBar() {
-        setBackButton()
-    }
     
     private func setupDelegate() {
         dailyNewsCountTableView.delegate = self

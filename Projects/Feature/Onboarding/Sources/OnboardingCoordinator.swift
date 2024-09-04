@@ -30,19 +30,19 @@ public class OnboardingCoordinator {
     private func showProfileViewController() {
         let profileViewController = factory.makeProfileViewController()
         profileViewController.delegate = self
-        navigationController.pushViewController(profileViewController, animated: true)
+        navigationController.pushViewController(profileViewController, animated: false)
     }
     
     private func showCategoryViewController() {
         let categoryViewController = factory.makeCategoryViewController()
         categoryViewController.delegate = self
-        navigationController.pushViewController(categoryViewController, animated: true)
+        navigationController.pushViewController(categoryViewController, animated: false)
     }
     
     private func showDailyNewsCountViewController() {
         let dailyNewsCountViewController = factory.makeDailyNewsCountViewController()
         dailyNewsCountViewController.delegate = self
-        navigationController.pushViewController(dailyNewsCountViewController, animated: true)
+        navigationController.pushViewController(dailyNewsCountViewController, animated: false)
     }
 }
 

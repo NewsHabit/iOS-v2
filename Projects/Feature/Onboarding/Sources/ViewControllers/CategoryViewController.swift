@@ -40,17 +40,12 @@ public final class CategoryViewController: BaseViewController<CategoryView> {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationBar()
         setupDelegate()
         setupAction()
         setupBinding()
     }
     
     // MARK: - Setup Methods
-    
-    private func setupNavigationBar() {
-        setBackButton()
-    }
     
     private func setupDelegate() {
         categoryCollectionView.delegate = self
