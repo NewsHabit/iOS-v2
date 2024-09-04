@@ -12,6 +12,7 @@ import Feature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    let localStorage = LocalStorageService()
     var onboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol?
 
     func scene(
@@ -22,25 +23,44 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let localStorage = LocalStorageService()
-        let rootViewController: UIViewController?
-        
         if localStorage.appState.isOnboardingCompleted {
-            let mainViewControllerFactory = MainViewControllerFactory(
-                localStorage: localStorage
-            )
-            rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+            launchMainView()
         } else {
-            onboardingViewControllerFactory = OnboardingViewControllerFactory(
-                localStorage: localStorage
-            )
-            rootViewController = onboardingViewControllerFactory?.makeOnboardingViewController()
+            launchOnboardingProcess()
         }
-        
-        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
+        
+        setupOnboardingCompletionObserver()
+    }
+    
+    private func launchMainView() {
+        let mainViewControllerFactory = MainViewControllerFactory(
+            localStorage: localStorage
+        )
+        window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+    }
+    
+    private func launchOnboardingProcess() {
+        onboardingViewControllerFactory = OnboardingViewControllerFactory(
+            localStorage: localStorage
+        )
+        window?.rootViewController = onboardingViewControllerFactory?.makeOnboardingViewController()
+    }
+    
+    private func setupOnboardingCompletionObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleOnboardingDidFinish),
+            name: .OnboardingDidFinishNotification,
+            object: nil
+        )
     }
 
+    @objc private func handleOnboardingDidFinish() {
+        localStorage.appState.isOnboardingCompleted = true
+        launchMainView()
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {}
 
     func sceneDidBecomeActive(_ scene: UIScene) {}

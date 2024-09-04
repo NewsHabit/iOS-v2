@@ -26,7 +26,7 @@ public enum CategoryType: Codable, CaseIterable {
         }
     }
     
-    public static func category(at index: Int) -> CategoryType {
+    public static func category(at index: Int) -> Self {
         return self.allCases[index]
     }
 }

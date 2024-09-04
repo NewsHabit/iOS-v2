@@ -9,6 +9,7 @@ import UIKit
 
 import Core
 import FeatureOnboardingInterface
+import Shared
 
 public class OnboardingCoordinator {
     private let navigationController: UINavigationController
@@ -59,8 +60,6 @@ extension OnboardingCoordinator: CategoryViewControllerDelegate {
                                     
 extension OnboardingCoordinator: DailyNewsCountViewControllerDelegate {
     public func dailyNewsCountViewControllerDidFinish() {
-        // Onboarding 완료 처리
-        // 예: AppDelegate나 SceneDelegate에서 메인 화면으로 전환
-        print("Onboarding 완료")
+        NotificationCenter.default.post(name: .OnboardingDidFinishNotification, object: nil)
     }
 }

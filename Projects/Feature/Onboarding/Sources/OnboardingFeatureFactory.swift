@@ -27,7 +27,8 @@ public class OnboardingFeatureFactory {
     }
     
     public func makeDailyNewsCountViewController() -> DailyNewsCountViewController {
-        return DailyNewsCountViewController()
+        let dailyNewsCountViewModel = DailyNewsCountViewModel(localStorage: localStorage)
+        return DailyNewsCountViewController(viewModel: dailyNewsCountViewModel)
     }
     
     public func makeOnboardingCoordinator(navigationController: UINavigationController) -> OnboardingCoordinator {
