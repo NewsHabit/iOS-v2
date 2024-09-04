@@ -15,6 +15,7 @@ extension UITextField {
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)
                 .compactMap { ($0.object as? UITextField)?.text }
         )
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 }
