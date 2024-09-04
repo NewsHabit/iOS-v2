@@ -5,28 +5,38 @@
 //  Created by 지연 on 8/28/24.
 //
 
+import Combine
 import UIKit
 
 import FeatureOnboardingInterface
 import Shared
 
 public final class ProfileViewController: BaseViewController<ProfileView> {
-    public weak var delegate: ProfileViewControllerDelegate?
+    private let viewModel: ProfileViewModel
+    private var cancellables = Set<AnyCancellable>()
     private let animationDuration = 0.35
     
-    // MARK: - Life Cycle
+    public weak var delegate: ProfileViewControllerDelegate?
+    
+    // MARK: - Init
+    
+    public init(viewModel: ProfileViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupAction()
-        setupDelegate()
-        setupNotificationObserver()
-        nicknameInputField.becomeFirstResponder()
+        setupBinding()
+        nicknameInputField.textField.becomeFirstResponder()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Setup Methods
@@ -35,53 +45,55 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
         nextButton.addTarget(self, action: #selector(handleNextButtonTap), for: .touchUpInside)
     }
     
-    private func setupDelegate() {
-        nicknameInputField.delegate = self
-    }
-    
-    private func setupNotificationObserver() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleKeyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleKeyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-    }
-    
-    @objc private func handleNextButtonTap() {
-        nicknameInputField.endEditing(true)
-        delegate?.profileViewControllerDidFinish()
-    }
-    
-    @objc private func handleKeyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
-        else { return }
+    private func setupBinding() {
+        keyboardWillShowPublisher
+            .sink { [weak self] keyboardHeight in
+                self?.adjustNextButtonPosition(keyboardHeight: keyboardHeight)
+            }.store(in: &cancellables)
         
+        keyboardWillHidePublisher
+            .sink { [weak self] _ in
+                self?.resetNextButtonPosition()
+            }.store(in: &cancellables)
+        
+        nicknameInputField.textField.textPublisher
+            .dropFirst() // 초기값 세팅을 위해 무시
+            .sink { [weak self] text in
+                guard let self else { return }
+                viewModel.send(.nicknameDidChange(nickname: text))
+            }.store(in: &cancellables)
+        
+        viewModel.$state
+            .sink { [weak self] state in
+                guard let self else { return }
+                nicknameInputField.textField.text = state.nickname
+                nextButton.isEnabled = nicknameInputField.isValid
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func adjustNextButtonPosition(keyboardHeight: CGFloat) {
         UIView.animate(withDuration: animationDuration) {
-            self.nextButton.transform = CGAffineTransform(
-                translationX: 0,
-                y: 30 - keyboardFrame.cgRectValue.height
-            )
+            self.nextButton.transform = CGAffineTransform(translationX: 0, y: 30 - keyboardHeight)
         }
     }
     
-    @objc private func handleKeyboardWillHide(notification: NSNotification) {
+    private func resetNextButtonPosition() {
         UIView.animate(withDuration: animationDuration) {
             self.nextButton.transform = .identity
         }
     }
-}
-
-extension ProfileViewController: NewsHabitInputFieldDelegate {
-    public func inputFieldDidChange(_ inputField: NewsHabitInputField, isValid: Bool) {
-        nextButton.isEnabled = nicknameInputField.isValid
+    
+    // MARK: - Action Methods
+    
+    @objc private func handleNextButtonTap() {
+        viewModel.send(.nextButtonDidTap)
+        nicknameInputField.endEditing(true)
+        delegate?.profileViewControllerDidFinish()
+    }
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        contentView.endEditing(true)
     }
 }
 

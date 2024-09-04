@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol LocalStorageProtocol {
-    var userSettings: UserSettingsStorageProtocol { get }
-    var newsData: NewsDataStorageProtocol { get }
-    var appState: AppStateStorageProtocol { get }
+    var userSettings: UserSettingsStorageProtocol { get set }
+    var newsData: NewsDataStorageProtocol { get set }
+    var appState: AppStateStorageProtocol { get set }
 }

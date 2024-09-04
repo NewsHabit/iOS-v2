@@ -17,7 +17,8 @@ public class OnboardingFeatureFactory {
     }
     
     public func makeProfileViewController() -> ProfileViewController {
-        return ProfileViewController()
+        let profileViewModel = ProfileViewModel(localStorage: localStorage)
+        return ProfileViewController(viewModel: profileViewModel)
     }
     
     public func makeCategoryViewController() -> CategoryViewController {

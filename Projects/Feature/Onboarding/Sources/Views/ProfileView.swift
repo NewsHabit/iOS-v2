@@ -36,13 +36,10 @@ public final class ProfileView: UIView {
         return label
     }()
     
-    lazy var nicknameInputField = {
-        let view = NewsHabitInputField(
-            maxLength: maxNicknameLength,
-            placeholder: "닉네임"
-        )
-        return view
-    }()
+    lazy var nicknameInputField = NewsHabitInputField(
+        maxLength: maxNicknameLength,
+        placeholder: "닉네임"
+    )
     
     let nextButton = NewsHabitConfirmButton(title: "다음")
     

@@ -11,20 +11,11 @@ import UIKit
 import FlexLayout
 import PinLayout
 
-public protocol NewsHabitInputFieldDelegate: AnyObject {
-    func inputFieldDidChange(_ inputField: NewsHabitInputField, isValid: Bool)
-}
-
 public final class NewsHabitInputField: UIView {
     private let maxLength: Int
     private var cancellables = Set<AnyCancellable>()
-    public weak var delegate: NewsHabitInputFieldDelegate?
     
-    public var isValid: Bool = false {
-        didSet {
-            delegate?.inputFieldDidChange(self, isValid: isValid)
-        }
-    }
+    public var isValid: Bool = false
     
     // MARK: - Components
     
