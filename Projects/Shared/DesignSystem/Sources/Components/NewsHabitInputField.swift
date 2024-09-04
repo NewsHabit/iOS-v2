@@ -5,6 +5,7 @@
 //  Created by 지연 on 8/29/24.
 //
 
+import Combine
 import UIKit
 
 import FlexLayout
@@ -16,7 +17,7 @@ public protocol NewsHabitInputFieldDelegate: AnyObject {
 
 public final class NewsHabitInputField: UIView {
     private let maxLength: Int
-    
+    private var cancellables = Set<AnyCancellable>()
     public weak var delegate: NewsHabitInputFieldDelegate?
     
     public var isValid: Bool = false {
@@ -113,16 +114,11 @@ public final class NewsHabitInputField: UIView {
     
     private func setUpTextField(placeholder: String?) {
         textField.placeholder = placeholder
-        textField.addTarget(
-            self,
-            action: #selector(handleTextFieldEditingChanged),
-            for: .editingChanged
-        )
-    }
-    
-    @objc private func handleTextFieldEditingChanged(_ textField: UITextField) {
-        guard let text = textField.text else { return }
-        validate(text: text)
+        textField.textPublisher
+            .sink { [weak self] text in
+                self?.validate(text: text)
+            }
+            .store(in: &cancellables)
     }
     
     private func validate(text: String) {
