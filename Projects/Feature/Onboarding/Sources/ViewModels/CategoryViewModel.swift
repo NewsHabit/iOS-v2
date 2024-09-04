@@ -1,8 +1,8 @@
 //
-//  ProfileViewModel.swift
-//  FeatureOnboardingInterface
+//  CategoryViewModel.swift
+//  FeatureOnboarding
 //
-//  Created by 지연 on 9/4/24.
+//  Created by 지연 on 9/5/24.
 //
 
 import Combine
@@ -11,18 +11,18 @@ import Foundation
 import Core
 import Shared
 
-public final class ProfileViewModel: ViewModel {
+public final class CategoryViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
-        case nicknameDidChange(nickname: String)
+        case categoryDidSelect(category: CategoryType)
         case nextButtonDidTap
     }
     
     // MARK: - State
     
     public struct State {
-        var nickname: String
+        var categories: Set<CategoryType>
     }
     
     // MARK: - Property
@@ -37,7 +37,7 @@ public final class ProfileViewModel: ViewModel {
     
     public init(localStorage: LocalStorageProtocol) {
         self.localStorage = localStorage
-        self.state = State(nickname: localStorage.userSettings.nickname)
+        self.state = State(categories: Set(localStorage.userSettings.selectedCategories))
         
         bindAction()
     }
@@ -51,10 +51,14 @@ public final class ProfileViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
-        case let .nicknameDidChange(nickname):
-            state.nickname = nickname
+        case let .categoryDidSelect(category: category):
+            if state.categories.contains(category) {
+                state.categories.remove(category)
+            } else {
+                state.categories.insert(category)
+            }
         case .nextButtonDidTap:
-            localStorage.userSettings.nickname = state.nickname
+            localStorage.userSettings.selectedCategories = Array(state.categories)
         }
     }
     

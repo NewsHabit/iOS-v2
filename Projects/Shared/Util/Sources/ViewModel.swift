@@ -14,4 +14,6 @@ public protocol ViewModel {
     associatedtype State
     
     var cancellables: Set<AnyCancellable> { get set }
+    
+    func send(_ action: Action)
 }

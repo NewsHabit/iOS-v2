@@ -26,17 +26,17 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupAction()
         setupBinding()
         nicknameInputField.textField.becomeFirstResponder()
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Setup Methods
@@ -93,7 +93,7 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        contentView.endEditing(true)
+        nicknameInputField.endEditing(true)
     }
 }
 

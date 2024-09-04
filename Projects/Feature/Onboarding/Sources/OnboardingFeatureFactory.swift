@@ -22,7 +22,8 @@ public class OnboardingFeatureFactory {
     }
     
     public func makeCategoryViewController() -> CategoryViewController {
-        return CategoryViewController()
+        let categoryViewModel = CategoryViewModel(localStorage: localStorage)
+        return CategoryViewController(viewModel: categoryViewModel)
     }
     
     public func makeDailyNewsCountViewController() -> DailyNewsCountViewController {
