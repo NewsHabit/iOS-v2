@@ -6,6 +6,9 @@
 //
 
 import UIKit
+
+import SharedUtil
+
 import PinLayout
 
 // MARK: - Protocols
@@ -99,7 +102,7 @@ open class BaseViewController<View: UIView>: UIViewController, NavigationBarConf
         contentView.pin
             .below(of: navigationBar)
             .horizontally()
-            .bottom(tabBarController?.tabBar.frame.height ?? 0)
+            .bottom(tabBarHeight)
     }
 
     // MARK: - NavigationBarConfigurable
