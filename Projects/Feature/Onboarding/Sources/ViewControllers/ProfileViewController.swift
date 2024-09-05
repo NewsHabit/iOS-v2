@@ -59,17 +59,15 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
         nicknameInputField.textField.textDidChangePublisher
             .dropFirst() // 초기값 세팅을 위해 무시
             .sink { [weak self] text in
-                guard let self else { return }
-                viewModel.send(.nicknameDidChange(nickname: text))
+                self?.viewModel.send(.nicknameDidChange(nickname: text))
             }.store(in: &cancellables)
         
-        viewModel.$state
-            .sink { [weak self] state in
-                guard let self else { return }
-                nicknameInputField.textField.text = state.nickname
+        viewModel.state.nickname
+            .sink { [weak self] nickname in
+                guard let self = self else { return }
+                nicknameInputField.textField.text = nickname
                 nextButton.isEnabled = nicknameInputField.isValid
-            }
-            .store(in: &cancellables)
+            }.store(in: &cancellables)
     }
     
     private func adjustNextButtonPosition(keyboardHeight: CGFloat) {

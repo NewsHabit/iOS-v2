@@ -14,7 +14,7 @@ import Shared
 public final class DailyNewsCountViewController:BaseViewController<DailyNewsCountView> {
     private let viewModel: DailyNewsCountViewModel
     private var cancellables = Set<AnyCancellable>()
-    
+    private var dataSource: UITableViewDiffableDataSource<Section, DailyNewsCountCellViewModel>!
     public weak var delegate: DailyNewsCountViewControllerDelegate?
     
     // MARK: - Init
@@ -33,6 +33,7 @@ public final class DailyNewsCountViewController:BaseViewController<DailyNewsCoun
         super.viewDidLoad()
         
         setupDelegate()
+        setupDataSource()
         setupAction()
         setupBinding()
     }
@@ -41,7 +42,19 @@ public final class DailyNewsCountViewController:BaseViewController<DailyNewsCoun
     
     private func setupDelegate() {
         dailyNewsCountTableView.delegate = self
-        dailyNewsCountTableView.dataSource = self
+    }
+    
+    private func setupDataSource() {
+        dataSource = UITableViewDiffableDataSource<Section, DailyNewsCountCellViewModel>(
+            tableView: dailyNewsCountTableView
+        ) { (tableView, indexPath, cellViewModel) -> UITableViewCell? in
+            let cell = tableView.dequeueReusableCell(
+                for: indexPath,
+                cellType: DailyNewsCountCell.self
+            )
+            cell.configure(with: cellViewModel)
+            return cell
+        }
     }
     
     private func setupAction() {
@@ -49,10 +62,18 @@ public final class DailyNewsCountViewController:BaseViewController<DailyNewsCoun
     }
     
     private func setupBinding() {
-        viewModel.$state
-            .sink { [weak self] state in
-                self?.dailyNewsCountTableView.reloadData()
+        viewModel.state.cellViewModels
+            .sink { [weak self] cellViewModels in
+                guard let self = self else { return }
+                updateDataSource(with: cellViewModels)
             }.store(in: &cancellables)
+    }
+    
+    private func updateDataSource(with cellViewModels: [DailyNewsCountCellViewModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyNewsCountCellViewModel>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(cellViewModels)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     // MARK: - Action Methods
@@ -67,22 +88,6 @@ extension DailyNewsCountViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedDailyNewsCount = DailyNewsCountType.dailyNewsCount(at: indexPath.row)
         viewModel.send(.dailyNewsCountDidSelect(count: selectedDailyNewsCount))
-    }
-}
-
-extension DailyNewsCountViewController: UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DailyNewsCountType.allCases.count
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(for: indexPath, cellType: DailyNewsCountCell.self)
-        let dailyNewsCount = DailyNewsCountType.allCases[indexPath.row]
-        cell.configure(
-            with: dailyNewsCount.rawValue,
-            isSelected: viewModel.state.count == dailyNewsCount
-        )
-        return cell
     }
 }
 

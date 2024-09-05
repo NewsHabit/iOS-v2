@@ -68,10 +68,9 @@ public final class DailyNewsCountCell: UITableViewCell, Reusable {
     
     // MARK: - Configure
     
-    public func configure(with count: Int, isSelected: Bool) {
-        titleLabel.text = "\(count)개"
-        
-        selectImageView.image = isSelected ?
+    public func configure(with viewModel: DailyNewsCountCellViewModel) {
+        titleLabel.text = "\(viewModel.count.rawValue)개"
+        selectImageView.image = viewModel.isSelected ?
         UIImage(systemName: "circle.inset.filled") :
         UIImage(systemName: "circle")
     }

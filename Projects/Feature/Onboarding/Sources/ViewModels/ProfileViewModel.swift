@@ -22,22 +22,23 @@ public final class ProfileViewModel: ViewModel {
     // MARK: - State
     
     public struct State {
-        var nickname: String
+        var nickname: CurrentValueSubject<String, Never>
     }
     
     // MARK: - Property
     
-    @Published private(set) var state: State
-    
     private let actionSubject = PassthroughSubject<Action, Never>()
     public var cancellables = Set<AnyCancellable>()
+    private(set) var state: State
     private var localStorage: LocalStorageProtocol
     
     // MARK: - Init
     
     public init(localStorage: LocalStorageProtocol) {
         self.localStorage = localStorage
-        self.state = State(nickname: localStorage.userSettings.nickname)
+        self.state = State(
+            nickname: CurrentValueSubject<String, Never>(localStorage.userSettings.nickname)
+        )
         
         bindAction()
     }
@@ -52,9 +53,9 @@ public final class ProfileViewModel: ViewModel {
     private func handleAction(_ action: Action) {
         switch action {
         case let .nicknameDidChange(nickname):
-            state.nickname = nickname
+            state.nickname.send(nickname)
         case .nextButtonDidTap:
-            localStorage.userSettings.nickname = state.nickname
+            localStorage.userSettings.nickname = state.nickname.value
         }
     }
     

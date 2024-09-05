@@ -25,8 +25,4 @@ public enum CategoryType: Codable, CaseIterable {
         case .itScience: "IT/과학"
         }
     }
-    
-    public static func category(at index: Int) -> Self {
-        return self.allCases[index]
-    }
 }
