@@ -22,22 +22,27 @@ public final class DailyNewsCountViewModel: ViewModel {
     // MARK: - State
     
     public struct State {
-        var count: DailyNewsCountType
+        var cellViewModels: CurrentValueSubject<[DailyNewsCountCellViewModel], Never>
     }
     
     // MARK: - Property
     
-    @Published private(set) var state: State
-    
     private let actionSubject = PassthroughSubject<Action, Never>()
     public var cancellables = Set<AnyCancellable>()
+    private(set) var state: State
     private var localStorage: LocalStorageProtocol
     
     // MARK: - Init
     
     public init(localStorage: LocalStorageProtocol) {
         self.localStorage = localStorage
-        self.state = State(count: localStorage.userSettings.dailyNewsCount)
+        let initialCellViewModels = DailyNewsCountType.allCases.map { count in
+            DailyNewsCountCellViewModel(
+                count: count,
+                isSelected: localStorage.userSettings.dailyNewsCount == count
+            )
+        }
+        self.state = State(cellViewModels: .init(initialCellViewModels))
         
         bindAction()
     }
@@ -52,10 +57,26 @@ public final class DailyNewsCountViewModel: ViewModel {
     private func handleAction(_ action: Action) {
         switch action {
         case let .dailyNewsCountDidSelect(count: count):
-            state.count = count
+            updateCategoryCellViewModel(for: count)
         case .doneButtonDidTap:
-            localStorage.userSettings.dailyNewsCount = state.count
+            saveDailyNewsCount()
         }
+    }
+    
+    private func updateCategoryCellViewModel(for count: DailyNewsCountType) {
+        let updatedCellViewModels = state.cellViewModels.value.map { cellViewModel in
+            var updatedViewModel = cellViewModel
+            updatedViewModel.isSelected = (cellViewModel.count == count)
+            return updatedViewModel
+        }
+        state.cellViewModels.send(updatedCellViewModels)
+    }
+    
+    private func saveDailyNewsCount() {
+        let dailyNewsCount = state.cellViewModels.value
+            .filter { $0.isSelected }
+            .map { $0.count }[0]
+        localStorage.userSettings.dailyNewsCount = dailyNewsCount
     }
     
     public func send(_ action: Action) {

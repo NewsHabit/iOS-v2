@@ -28,15 +28,10 @@ public final class ProfileView: UIView {
         return label
     }()
     
-    private lazy var nicknameInputField = {
-        let view = NewsHabitInputField(
-            maxLength: maxNicknameLength,
-            placeholder: "닉네임"
-        )
-        view.textField.becomeFirstResponder()
-        view.delegate = self
-        return view
-    }()
+    private lazy var nicknameInputField = NewsHabitInputField(
+        maxLength: maxNicknameLength,
+        placeholder: "닉네임"
+    )
     
     let doneButton = NewsHabitConfirmButton(title: "완료")
     
@@ -76,11 +71,5 @@ public final class ProfileView: UIView {
                 .cornerRadius(8)
                 .marginBottom(50)
         }
-    }
-}
-
-extension ProfileView: NewsHabitInputFieldDelegate {
-    public func inputFieldDidChange(_ inputField: NewsHabitInputField, isValid: Bool) {
-        doneButton.isEnabled = nicknameInputField.isValid
     }
 }

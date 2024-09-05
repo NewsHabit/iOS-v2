@@ -11,10 +11,6 @@ import UIKit
 import FeatureOnboardingInterface
 import Shared
 
-private enum Section {
-    case main
-}
-
 public final class CategoryViewController: BaseViewController<CategoryView> {
     private let viewModel: CategoryViewModel
     private var cancellables = Set<AnyCancellable>()
