@@ -26,7 +26,6 @@ public final class CategoryViewController: BottomSheetViewController<CategoryVie
     
     private func setupDelegate() {
         categoryCollectionView.delegate = self
-        categoryCollectionView.dataSource = self
     }
 }
 
@@ -43,25 +42,6 @@ extension CategoryViewController: UICollectionViewDelegateFlowLayout {
         size.height += 16
         
         return size
-    }
-}
-
-extension CategoryViewController: UICollectionViewDataSource {
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        return CategoryType.allCases.count
-    }
-    
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: CategoryCell.self)
-        cell.configure(with: CategoryType.allCases[indexPath.row].name)
-        cell.setSelected(false)
-        return cell
     }
 }
 

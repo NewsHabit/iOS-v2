@@ -22,22 +22,27 @@ public final class CategoryViewModel: ViewModel {
     // MARK: - State
     
     public struct State {
-        var categories: Set<CategoryType>
+        var cellViewModels: CurrentValueSubject<[CategoryCellViewModel], Never>
     }
     
     // MARK: - Property
     
-    @Published private(set) var state: State
-    
     private let actionSubject = PassthroughSubject<Action, Never>()
     public var cancellables = Set<AnyCancellable>()
+    private(set) var state: State
     private var localStorage: LocalStorageProtocol
     
     // MARK: - Init
     
     public init(localStorage: LocalStorageProtocol) {
         self.localStorage = localStorage
-        self.state = State(categories: Set(localStorage.userSettings.selectedCategories))
+        let initialCellViewModels = CategoryType.allCases.map { category in
+            CategoryCellViewModel(
+                category: category,
+                isSelected: localStorage.userSettings.selectedCategories.contains(category)
+            )
+        }
+        self.state = State(cellViewModels: .init(initialCellViewModels))
         
         bindAction()
     }
@@ -52,14 +57,29 @@ public final class CategoryViewModel: ViewModel {
     private func handleAction(_ action: Action) {
         switch action {
         case let .categoryDidSelect(category: category):
-            if state.categories.contains(category) {
-                state.categories.remove(category)
-            } else {
-                state.categories.insert(category)
-            }
+            updateCategoryCellViewModel(for: category)
         case .nextButtonDidTap:
-            localStorage.userSettings.selectedCategories = Array(state.categories)
+            saveSelectedCategories()
         }
+    }
+    
+    private func updateCategoryCellViewModel(for category: CategoryType) {
+        let updatedCellViewModels = state.cellViewModels.value.map { cellViewModel in
+            if cellViewModel.category == category {
+                var updatedViewModel = cellViewModel
+                updatedViewModel.isSelected.toggle()
+                return updatedViewModel
+            }
+            return cellViewModel
+        }
+        state.cellViewModels.send(updatedCellViewModels)
+    }
+    
+    private func saveSelectedCategories() {
+        let selectedCategories = state.cellViewModels.value
+            .filter { $0.isSelected }
+            .map { $0.category }
+        localStorage.userSettings.selectedCategories = selectedCategories
     }
     
     public func send(_ action: Action) {

@@ -11,10 +11,14 @@ import UIKit
 import FeatureOnboardingInterface
 import Shared
 
+private enum Section {
+    case main
+}
+
 public final class CategoryViewController: BaseViewController<CategoryView> {
     private let viewModel: CategoryViewModel
     private var cancellables = Set<AnyCancellable>()
-    
+    private var dataSource: UICollectionViewDiffableDataSource<Section, CategoryCellViewModel>!
     public weak var delegate: CategoryViewControllerDelegate?
     
     /// CategoryCell의 크기를 동적으로 알아내기 위한 더미 셀
@@ -41,6 +45,7 @@ public final class CategoryViewController: BaseViewController<CategoryView> {
         super.viewDidLoad()
         
         setupDelegate()
+        setupDataSource()
         setupAction()
         setupBinding()
     }
@@ -49,7 +54,19 @@ public final class CategoryViewController: BaseViewController<CategoryView> {
     
     private func setupDelegate() {
         categoryCollectionView.delegate = self
-        categoryCollectionView.dataSource = self
+    }
+    
+    private func setupDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<Section, CategoryCellViewModel>(
+            collectionView: categoryCollectionView
+        ) { (collectionView, indexPath, cellViewModel) -> UICollectionViewCell? in
+            let cell = collectionView.dequeueReusableCell(
+                for: indexPath,
+                cellType: CategoryCell.self
+            )
+            cell.configure(with: cellViewModel)
+            return cell
+        }
     }
     
     private func setupAction() {
@@ -57,12 +74,19 @@ public final class CategoryViewController: BaseViewController<CategoryView> {
     }
     
     private func setupBinding() {
-        viewModel.$state
-            .sink { [weak self] state in
-                guard let self else { return }
-                nextButton.isEnabled = !state.categories.isEmpty
-                categoryCollectionView.reloadData()
+        viewModel.state.cellViewModels
+            .sink { [weak self] cellViewModels in
+                guard let self = self else { return }
+                nextButton.isEnabled = !cellViewModels.filter{ $0.isSelected }.isEmpty
+                updateDataSource(with: cellViewModels)
             }.store(in: &cancellables)
+    }
+    
+    private func updateDataSource(with cellViewModels: [CategoryCellViewModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CategoryCellViewModel>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(cellViewModels)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     // MARK: - Action Methods
@@ -79,7 +103,9 @@ extension CategoryViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        sizingLabel.text = CategoryType.allCases[indexPath.row].name
+        guard let cellViewModel = dataSource.itemIdentifier(for: indexPath) else { return .zero }
+        
+        sizingLabel.text = cellViewModel.category.name
         
         var size = sizingLabel.sizeThatFits(.zero)
         size.width += 40
@@ -94,30 +120,8 @@ extension CategoryViewController: UICollectionViewDelegate {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        let selectedCategory = CategoryType.category(at: indexPath.row)
-        viewModel.send(.categoryDidSelect(category: selectedCategory))
-    }
-}
-
-extension CategoryViewController: UICollectionViewDataSource {
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        return CategoryType.allCases.count
-    }
-    
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: CategoryCell.self)
-        let category = CategoryType.allCases[indexPath.row]
-        cell.configure(
-            with: category.name,
-            isSelected: viewModel.state.categories.contains(category)
-        )
-        return cell
+        guard let cellViewModel = dataSource.itemIdentifier(for: indexPath) else { return }
+        viewModel.send(.categoryDidSelect(category: cellViewModel.category))
     }
 }
 
