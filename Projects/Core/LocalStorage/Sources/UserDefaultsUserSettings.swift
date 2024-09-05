@@ -16,7 +16,7 @@ public final class UserDefaultsUserSettings: UserSettingsStorageProtocol {
     @UserDefaultsData(key: "nickname", defaultValue: "사용자")
     public var nickname: String
     
-    @UserDefaultsData(key: "selectedCategories", defaultValue: [CategoryType.itScience])
+    @UserDefaultsData(key: "selectedCategories", defaultValue: [])
     public var selectedCategories: [CategoryType]
     
     @UserDefaultsData(key: "dailyNewsCount", defaultValue: DailyNewsCountType.three)

@@ -1,6 +1,6 @@
 //
 //  DailyNewsCountView.swift
-//  FeatureOnboardingInterface
+//  FeatureOnboarding
 //
 //  Created by 지연 on 8/29/24.
 //
@@ -16,6 +16,8 @@ public final class DailyNewsCountView: UIView {
     // MARK: - Components
     
     private let flexContainer = UIView()
+    
+    private let progressBar = OnboardingProgressBar(onboardingType: .dailyNewsCount)
     
     private let titleLabel = {
         let label = UILabel()
@@ -35,7 +37,7 @@ public final class DailyNewsCountView: UIView {
         return tableView
     }()
     
-    let doneButton = NewsHabitConfirmButton(title: "완료")
+    let doneButton = NewsHabitConfirmButton(initialEnabled: true, title: "완료")
     
     // MARK: - Init
     
@@ -60,7 +62,11 @@ public final class DailyNewsCountView: UIView {
     private func setupLayout() {
         addSubview(flexContainer)
         flexContainer.flex.paddingHorizontal(20).define { flex in
+            flex.addItem(progressBar)
+                .height(4)
+            
             flex.addItem(titleLabel)
+                .marginTop(40)
             
             flex.addItem(tableView)
                 .marginTop(40)

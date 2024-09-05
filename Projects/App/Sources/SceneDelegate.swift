@@ -12,6 +12,8 @@ import Feature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    let localStorage = LocalStorageService()
+    var onboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol?
 
     func scene(
         _ scene: UIScene,
@@ -21,14 +23,44 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
+        if localStorage.appState.isOnboardingCompleted {
+            launchMainView()
+        } else {
+            launchOnboardingProcess()
+        }
+        window?.makeKeyAndVisible()
+        
+        setupOnboardingCompletionObserver()
+    }
+    
+    private func launchMainView() {
         let mainViewControllerFactory = MainViewControllerFactory(
-            localStorage: LocalStorageService()
+            localStorage: localStorage
         )
         window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
-        
-        window?.makeKeyAndVisible()
+    }
+    
+    private func launchOnboardingProcess() {
+        onboardingViewControllerFactory = OnboardingViewControllerFactory(
+            localStorage: localStorage
+        )
+        window?.rootViewController = onboardingViewControllerFactory?.makeOnboardingViewController()
+    }
+    
+    private func setupOnboardingCompletionObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleOnboardingDidFinish),
+            name: .OnboardingDidFinishNotification,
+            object: nil
+        )
     }
 
+    @objc private func handleOnboardingDidFinish() {
+        localStorage.appState.isOnboardingCompleted = true
+        launchMainView()
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {}
 
     func sceneDidBecomeActive(_ scene: UIScene) {}

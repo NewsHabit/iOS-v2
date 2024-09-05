@@ -10,9 +10,9 @@ import Foundation
 import CoreLocalStorageInterface
 
 public final class LocalStorageService: LocalStorageProtocol {
-    public let userSettings: UserSettingsStorageProtocol
-    public let newsData: NewsDataStorageProtocol
-    public let appState: AppStateStorageProtocol
+    public var userSettings: UserSettingsStorageProtocol
+    public var newsData: NewsDataStorageProtocol
+    public var appState: AppStateStorageProtocol
     
     public init(userSettings: UserSettingsStorageProtocol = UserDefaultsUserSettings(),
                 newsData: NewsDataStorageProtocol = UserDefaultsNewsData(),

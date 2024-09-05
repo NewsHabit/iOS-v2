@@ -19,6 +19,8 @@ public final class ProfileView: UIView {
     
     private let flexContainer = UIView()
     
+    private let progressBar = OnboardingProgressBar(onboardingType: .profile)
+    
     private let titleLabel = {
         let label = UILabel()
         label.text = "프로필을 설정해주세요"
@@ -36,15 +38,10 @@ public final class ProfileView: UIView {
         return label
     }()
     
-    private lazy var nicknameInputField = {
-        let view = NewsHabitInputField(
-            maxLength: maxNicknameLength,
-            placeholder: "닉네임"
-        )
-        view.textField.becomeFirstResponder()
-        view.delegate = self
-        return view
-    }()
+    lazy var nicknameInputField = NewsHabitInputField(
+        maxLength: maxNicknameLength,
+        placeholder: "닉네임"
+    )
     
     let nextButton = NewsHabitConfirmButton(title: "다음")
     
@@ -71,7 +68,11 @@ public final class ProfileView: UIView {
     private func setupLayout() {
         addSubview(flexContainer)
         flexContainer.flex.paddingHorizontal(20).define { flex in
+            flex.addItem(progressBar)
+                .height(4)
+            
             flex.addItem(titleLabel)
+                .marginTop(40)
             
             flex.addItem(subTitleLabel)
                 .marginTop(40)
@@ -86,11 +87,5 @@ public final class ProfileView: UIView {
                 .cornerRadius(8)
                 .marginBottom(50)
         }
-    }
-}
-
-extension ProfileView: NewsHabitInputFieldDelegate {
-    public func inputFieldDidChange(_ inputField: NewsHabitInputField, isValid: Bool) {
-        nextButton.isEnabled = nicknameInputField.isValid
     }
 }

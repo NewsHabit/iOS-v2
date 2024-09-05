@@ -48,11 +48,8 @@ public final class CategoryCell: UICollectionViewCell, Reusable {
     
     // MARK: - Configure
     
-    public func configure(with categoryName: String) {
+    public func configure(with categoryName: String, isSelected: Bool) {
         nameLabel.text = categoryName
-    }
-    
-    public func setSelected(_ isSelected: Bool) {
         backgroundColor = isSelected ? Colors.gray08 : Colors.disabled
     }
 }

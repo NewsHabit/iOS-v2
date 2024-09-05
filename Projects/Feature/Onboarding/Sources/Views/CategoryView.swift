@@ -1,6 +1,6 @@
 //
 //  CategoryView.swift
-//  FeatureOnboardingExample
+//  FeatureOnboarding
 //
 //  Created by 지연 on 8/29/24.
 //
@@ -16,6 +16,8 @@ public final class CategoryView: UIView {
     // MARK: - Components
     
     private let flexContainer = UIView()
+    
+    private let progressBar = OnboardingProgressBar(onboardingType: .category)
     
     private let titleLabel = {
         let label = UILabel()
@@ -69,13 +71,17 @@ public final class CategoryView: UIView {
     private func setupLayout() {
         addSubview(flexContainer)
         flexContainer.flex.paddingHorizontal(20).define { flex in
+            flex.addItem(progressBar)
+                .height(4)
+            
             flex.addItem(titleLabel)
+                .marginTop(40)
             
             flex.addItem(subTitleLabel)
-                .marginTop(20)
+                .marginTop(40)
             
             flex.addItem(collectionView)
-                .marginTop(40)
+                .marginTop(20)
                 .grow(1)
             
             flex.addItem(nextButton)
