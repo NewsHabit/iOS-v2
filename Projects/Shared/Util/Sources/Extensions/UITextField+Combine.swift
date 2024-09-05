@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 extension UITextField {
-    public var textPublisher: AnyPublisher<String, Never> {
+    public var textDidChangePublisher: AnyPublisher<String, Never> {
         Publishers.Merge(
             publisher(for: \.text).compactMap { $0 },
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification)

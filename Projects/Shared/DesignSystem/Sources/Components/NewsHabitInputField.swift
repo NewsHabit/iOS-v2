@@ -105,7 +105,7 @@ public final class NewsHabitInputField: UIView {
     
     private func setUpTextField(placeholder: String?) {
         textField.placeholder = placeholder
-        textField.textPublisher
+        textField.textDidChangePublisher
             .sink { [weak self] text in
                 self?.validate(text: text)
             }

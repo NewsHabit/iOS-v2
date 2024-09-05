@@ -56,7 +56,7 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
                 self?.resetNextButtonPosition()
             }.store(in: &cancellables)
         
-        nicknameInputField.textField.textPublisher
+        nicknameInputField.textField.textDidChangePublisher
             .dropFirst() // 초기값 세팅을 위해 무시
             .sink { [weak self] text in
                 guard let self else { return }
