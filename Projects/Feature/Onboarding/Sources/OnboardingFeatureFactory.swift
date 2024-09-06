@@ -10,24 +10,24 @@ import UIKit
 import Core
 
 public class OnboardingFeatureFactory {
-    private let localStorage: LocalStorageProtocol
+    private let localStorageService: LocalStorageProtocol
     
-    public init(localStorage: LocalStorageProtocol) {
-        self.localStorage = localStorage
+    public init(localStorageService: LocalStorageProtocol) {
+        self.localStorageService = localStorageService
     }
     
     public func makeProfileViewController() -> ProfileViewController {
-        let profileViewModel = ProfileViewModel(localStorage: localStorage)
+        let profileViewModel = ProfileViewModel(localStorageService: localStorageService)
         return ProfileViewController(viewModel: profileViewModel)
     }
     
     public func makeCategoryViewController() -> CategoryViewController {
-        let categoryViewModel = CategoryViewModel(localStorage: localStorage)
+        let categoryViewModel = CategoryViewModel(localStorageService: localStorageService)
         return CategoryViewController(viewModel: categoryViewModel)
     }
     
     public func makeDailyNewsCountViewController() -> DailyNewsCountViewController {
-        let dailyNewsCountViewModel = DailyNewsCountViewModel(localStorage: localStorage)
+        let dailyNewsCountViewModel = DailyNewsCountViewModel(localStorageService: localStorageService)
         return DailyNewsCountViewController(viewModel: dailyNewsCountViewModel)
     }
     

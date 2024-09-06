@@ -8,12 +8,18 @@
 import UIKit
 
 import Core
+import Domain
 
 public class MainFeatureFactory {
-    private let localStorage: LocalStorageProtocol
+    private let localStorageService: LocalStorageProtocol
+    private let notificationService: NotificationProtocol
     
-    public init(localStorage: LocalStorageProtocol) {
-        self.localStorage = localStorage
+    public init(
+        localStorageService: LocalStorageProtocol,
+        notificationService: NotificationProtocol
+    ) {
+        self.localStorageService = localStorageService
+        self.notificationService = notificationService
     }
     
     public func makeHomeViewController() -> UIViewController {

@@ -7,3 +7,5 @@
 
 @_exported import DomainNews
 @_exported import DomainNewsInterface
+@_exported import DomainNotification
+@_exported import DomainNotificationInterface

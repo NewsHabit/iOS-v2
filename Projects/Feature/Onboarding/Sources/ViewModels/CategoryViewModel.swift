@@ -30,16 +30,16 @@ public final class CategoryViewModel: ViewModel {
     private let actionSubject = PassthroughSubject<Action, Never>()
     public var cancellables = Set<AnyCancellable>()
     private(set) var state: State
-    private var localStorage: LocalStorageProtocol
+    private var localStorageService: LocalStorageProtocol
     
     // MARK: - Init
     
-    public init(localStorage: LocalStorageProtocol) {
-        self.localStorage = localStorage
+    public init(localStorageService: LocalStorageProtocol) {
+        self.localStorageService = localStorageService
         let initialCellViewModels = CategoryType.allCases.map { category in
             CategoryCellViewModel(
                 category: category,
-                isSelected: localStorage.userSettings.selectedCategories.contains(category)
+                isSelected: localStorageService.userSettings.selectedCategories.contains(category)
             )
         }
         self.state = State(cellViewModels: .init(initialCellViewModels))
@@ -79,7 +79,7 @@ public final class CategoryViewModel: ViewModel {
         let selectedCategories = state.cellViewModels.value
             .filter { $0.isSelected }
             .map { $0.category }
-        localStorage.userSettings.selectedCategories = selectedCategories
+        localStorageService.userSettings.selectedCategories = selectedCategories
     }
     
     public func send(_ action: Action) {

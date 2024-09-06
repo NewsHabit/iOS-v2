@@ -13,16 +13,16 @@ import DomainNotificationInterface
 import Shared
 
 public final class NotificationService: NotificationProtocol {
-    private let localStorage: LocalStorageProtocol
+    private let localStorageService: LocalStorageProtocol
     private var cancellables = Set<AnyCancellable>()
     private let identifier = "NewsHabit"
     private let notificationCenter: UNUserNotificationCenter
     
     public init(
-        localStorage: LocalStorageProtocol,
+        localStorageService: LocalStorageProtocol,
         notificationCenter: UNUserNotificationCenter = .current()
     ) {
-        self.localStorage = localStorage
+        self.localStorageService = localStorageService
         self.notificationCenter = notificationCenter
     }
     
@@ -92,7 +92,7 @@ public final class NotificationService: NotificationProtocol {
     private func createNotificationContent() -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = "뉴스를 습관처럼"
-        content.body = "\(localStorage.userSettings.nickname)님을 위한 뉴스가 도착했어요"
+        content.body = "\(localStorageService.userSettings.nickname)님을 위한 뉴스가 도착했어요"
         content.sound = .default
         return content
     }
@@ -100,7 +100,7 @@ public final class NotificationService: NotificationProtocol {
     private func createNotificationTrigger() -> UNCalendarNotificationTrigger {
         let dateComponents = Calendar.current.dateComponents(
             [.hour, .minute],
-            from: localStorage.userSettings.notificationTime.toTimeAsDate()!
+            from: localStorageService.userSettings.notificationTime.toTimeAsDate()!
         )
         return UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
     }
@@ -118,7 +118,7 @@ public final class NotificationService: NotificationProtocol {
     }
     
     public func updateNotificationSettings() {
-        if localStorage.userSettings.isNotificationEnabled {
+        if localStorageService.userSettings.isNotificationEnabled {
             scheduleNotification()
                 .sink(receiveCompletion: { _ in }, receiveValue: { })
                 .store(in: &cancellables)

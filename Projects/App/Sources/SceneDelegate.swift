@@ -8,11 +8,12 @@
 import UIKit
 
 import Core
+import Domain
 import Feature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    let localStorage = LocalStorageService()
+    let localStorageService = LocalStorageService()
     var onboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol?
 
     func scene(
@@ -23,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        if localStorage.appState.isOnboardingCompleted {
+        if localStorageService.appState.isOnboardingCompleted {
             launchMainView()
         } else {
             launchOnboardingProcess()
@@ -34,15 +35,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func launchMainView() {
+        let notificationService = NotificationService(localStorageService: localStorageService)
         let mainViewControllerFactory = MainViewControllerFactory(
-            localStorage: localStorage
+            localStorageService: localStorageService,
+            notificationService: notificationService
         )
         window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
     }
     
     private func launchOnboardingProcess() {
         onboardingViewControllerFactory = OnboardingViewControllerFactory(
-            localStorage: localStorage
+            localStorageService: localStorageService
         )
         window?.rootViewController = onboardingViewControllerFactory?.makeOnboardingViewController()
     }
@@ -57,7 +60,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @objc private func handleOnboardingDidFinish() {
-        localStorage.appState.isOnboardingCompleted = true
+        localStorageService.appState.isOnboardingCompleted = true
         launchMainView()
     }
     

@@ -30,16 +30,16 @@ public final class DailyNewsCountViewModel: ViewModel {
     private let actionSubject = PassthroughSubject<Action, Never>()
     public var cancellables = Set<AnyCancellable>()
     private(set) var state: State
-    private var localStorage: LocalStorageProtocol
+    private var localStorageService: LocalStorageProtocol
     
     // MARK: - Init
     
-    public init(localStorage: LocalStorageProtocol) {
-        self.localStorage = localStorage
+    public init(localStorageService: LocalStorageProtocol) {
+        self.localStorageService = localStorageService
         let initialCellViewModels = DailyNewsCountType.allCases.map { count in
             DailyNewsCountCellViewModel(
                 count: count,
-                isSelected: localStorage.userSettings.dailyNewsCount == count
+                isSelected: localStorageService.userSettings.dailyNewsCount == count
             )
         }
         self.state = State(cellViewModels: .init(initialCellViewModels))
@@ -76,7 +76,7 @@ public final class DailyNewsCountViewModel: ViewModel {
         let dailyNewsCount = state.cellViewModels.value
             .filter { $0.isSelected }
             .map { $0.count }[0]
-        localStorage.userSettings.dailyNewsCount = dailyNewsCount
+        localStorageService.userSettings.dailyNewsCount = dailyNewsCount
     }
     
     public func send(_ action: Action) {
