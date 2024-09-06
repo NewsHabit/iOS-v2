@@ -1,5 +1,5 @@
 //
-//  ProfileViewModel.swift
+//  MyNewsHabitViewModel.swift
 //  FeatureMain
 //
 //  Created by 지연 on 9/6/24.
@@ -11,18 +11,17 @@ import Foundation
 import Core
 import Shared
 
-public final class ProfileViewModel: ViewModel {
+public final class MyNewsHabitViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
-        case nicknameDidChange(nickname: String)
-        case saveButtonDidTap
+        
     }
     
     // MARK: - State
     
     public struct State {
-        var nickname: CurrentValueSubject<String, Never>
+        
     }
     
     // MARK: - Property
@@ -36,9 +35,7 @@ public final class ProfileViewModel: ViewModel {
     
     public init(localStorageService: LocalStorageProtocol) {
         self.localStorageService = localStorageService
-        self.state = State(
-            nickname: CurrentValueSubject<String, Never>(localStorageService.userSettings.nickname)
-        )
+        self.state = State()
         
         bindAction()
     }
@@ -52,10 +49,6 @@ public final class ProfileViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
-        case let .nicknameDidChange(nickname):
-            state.nickname.send(nickname)
-        case .saveButtonDidTap:
-            localStorageService.userSettings.nickname = state.nickname.value
         }
     }
     

@@ -77,8 +77,8 @@ public final class MyNewsHabitCell: UITableViewCell, Reusable {
     
     // MARK: - Configure
     
-    public func configure(with myNewsHabitType: MyNewsHabitType) {
-        titleLabel.text = myNewsHabitType.title
-        descriptionLabel.text = myNewsHabitType.title
+    public func configure(title: String, description: String) {
+        titleLabel.text = title
+        descriptionLabel.text = description
     }
 }

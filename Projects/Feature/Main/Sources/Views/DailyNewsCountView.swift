@@ -44,7 +44,7 @@ public final class DailyNewsCountView: UIView {
         return tableView
     }()
     
-    let saveButton = NewsHabitConfirmButton(title: "저장")
+    let saveButton = NewsHabitConfirmButton(initialEnabled: true, title: "저장")
     
     // MARK: - Init
     

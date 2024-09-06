@@ -91,7 +91,7 @@ public final class ProfileViewController: BaseViewController<ProfileView> {
     // MARK: - Action Methods
     
     @objc private func handleNextButtonTap() {
-        viewModel.send(.doneButtonDidTap)
+        viewModel.send(.saveButtonDidTap)
         nicknameInputField.endEditing(true)
         navigationController?.popViewController(animated: true)
     }
@@ -107,6 +107,6 @@ private extension ProfileViewController {
     }
     
     var doneButton: NewsHabitConfirmButton {
-        contentView.doneButton
+        contentView.saveButton
     }
 }

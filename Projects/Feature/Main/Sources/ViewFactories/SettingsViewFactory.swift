@@ -28,7 +28,11 @@ public final class SettingsViewFactory {
     }
     
     public func makeMyNewsHabitViewController() -> MyNewsHabitViewController {
-        return MyNewsHabitViewController()
+        let viewFactory = MyNewsHabitViewFactory(localStorageService: localStorageService)
+        return MyNewsHabitViewController(
+            localStorageService: localStorageService,
+            viewFactory: viewFactory
+        )
     }
     
     public func makeNotificationViewController() -> NotificationViewController {
