@@ -10,7 +10,7 @@ import UIKit
 import Core
 import Domain
 
-public class MainFeatureFactory {
+public final class MainFeatureFactory {
     private let localStorageService: LocalStorageProtocol
     private let notificationService: NotificationProtocol
     
@@ -31,6 +31,10 @@ public class MainFeatureFactory {
     }
     
     public func makeSettingsViewController() -> UIViewController {
-        return SettingsViewController()
+        let viewFactory = SettingsViewFactory(
+            localStorageService: localStorageService,
+            notificationService: notificationService
+        )
+        return SettingsViewController(viewFactory: viewFactory)
     }
 }

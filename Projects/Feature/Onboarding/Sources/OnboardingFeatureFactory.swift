@@ -9,7 +9,7 @@ import UIKit
 
 import Core
 
-public class OnboardingFeatureFactory {
+public final class OnboardingFeatureFactory {
     private let localStorageService: LocalStorageProtocol
     
     public init(localStorageService: LocalStorageProtocol) {

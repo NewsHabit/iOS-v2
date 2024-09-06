@@ -11,7 +11,7 @@ import Core
 import FeatureOnboardingInterface
 import Shared
 
-public class OnboardingCoordinator {
+public final class OnboardingCoordinator {
     private let navigationController: UINavigationController
     private let factory: OnboardingFeatureFactory
     

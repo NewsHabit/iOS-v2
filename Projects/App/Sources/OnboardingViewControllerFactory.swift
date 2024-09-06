@@ -10,7 +10,7 @@ import UIKit
 import Core
 import Feature
 
-class OnboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol {
+final class OnboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol {
     private let onboardingFeatureFactory: OnboardingFeatureFactory
     private var coordinator: OnboardingCoordinator?
     

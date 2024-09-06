@@ -11,7 +11,7 @@ import Core
 import Domain
 import Feature
 
-class MainViewControllerFactory: MainViewControllerFactoryProtocol {
+final class MainViewControllerFactory: MainViewControllerFactoryProtocol {
     private let mainFeatureFactory: MainFeatureFactory
     
     init(
