@@ -36,7 +36,12 @@ public final class SettingsViewFactory {
     }
     
     public func makeNotificationViewController() -> NotificationViewController {
-        return NotificationViewController()
+        let viewModel = NotificationViewModel(
+            notificationService: notificationService,
+            isNotificationEnabled: localStorageService.userSettings.isNotificationEnabled,
+            notificationTime: localStorageService.userSettings.notificationTime
+        )
+        return NotificationViewController(viewModel: viewModel)
     }
     
     public func makeDeveloperViewController() -> DeveloperViewController {

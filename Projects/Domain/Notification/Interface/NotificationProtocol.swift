@@ -8,10 +8,12 @@
 import Combine
 import UserNotifications
 
+import Core
+
 public protocol NotificationProtocol {
     func requestNotificationPermission() -> AnyPublisher<Bool, Never>
     func checkNotificationPermission() -> AnyPublisher<UNAuthorizationStatus, Never>
-    func scheduleNotification() -> AnyPublisher<Void, Error>
+    func scheduleNotification(at time: String?) -> AnyPublisher<Void, Error>
     func cancelNotification() -> AnyPublisher<Void, Never>
-    func updateNotificationSettings()
+    func updateNotificationSettings(isEnabled: Bool, time: String?)
 }

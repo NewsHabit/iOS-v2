@@ -13,7 +13,7 @@ import DomainNotificationInterface
 import Shared
 
 public final class NotificationService: NotificationProtocol {
-    private let localStorageService: LocalStorageProtocol
+    private var localStorageService: LocalStorageProtocol
     private var cancellables = Set<AnyCancellable>()
     private let identifier = "NewsHabit"
     private let notificationCenter: UNUserNotificationCenter
@@ -48,7 +48,7 @@ public final class NotificationService: NotificationProtocol {
         .eraseToAnyPublisher()
     }
     
-    public func scheduleNotification() -> AnyPublisher<Void, Error> {
+    public func scheduleNotification(at time: String? = nil) -> AnyPublisher<Void, Error> {
         cancelNotification()
             .flatMap { [weak self] _ -> AnyPublisher<Void, Error> in
                 guard let self = self else {
@@ -58,8 +58,10 @@ public final class NotificationService: NotificationProtocol {
                         userInfo: nil
                     )).eraseToAnyPublisher()
                 }
-                
-                return self.createAndScheduleNotification()
+                if let time = time {
+                    localStorageService.userSettings.notificationTime = time
+                }
+                return createAndScheduleNotification()
             }
             .eraseToAnyPublisher()
     }
@@ -69,15 +71,15 @@ public final class NotificationService: NotificationProtocol {
             Future { [weak self] promise in
                 guard let self = self else { return }
                 
-                let content = self.createNotificationContent()
-                let trigger = self.createNotificationTrigger()
+                let content = createNotificationContent()
+                let trigger = createNotificationTrigger()
                 let request = UNNotificationRequest(
                     identifier: self.identifier,
                     content: content,
                     trigger: trigger
                 )
                 
-                self.notificationCenter.add(request) { error in
+                notificationCenter.add(request) { error in
                     if let error = error {
                         promise(.failure(error))
                     } else {
@@ -108,8 +110,9 @@ public final class NotificationService: NotificationProtocol {
     public func cancelNotification() -> AnyPublisher<Void, Never> {
         Deferred {
             Future { [weak self] promise in
-                self?.notificationCenter.removePendingNotificationRequests(
-                    withIdentifiers: [self?.identifier ?? ""]
+                guard let self = self else { return promise(.success(())) }
+                notificationCenter.removePendingNotificationRequests(
+                    withIdentifiers: [identifier]
                 )
                 promise(.success(()))
             }
@@ -117,9 +120,10 @@ public final class NotificationService: NotificationProtocol {
         .eraseToAnyPublisher()
     }
     
-    public func updateNotificationSettings() {
-        if localStorageService.userSettings.isNotificationEnabled {
-            scheduleNotification()
+    public func updateNotificationSettings(isEnabled: Bool, time: String? = nil) {
+        localStorageService.userSettings.isNotificationEnabled = isEnabled
+        if isEnabled {
+            scheduleNotification(at: time)
                 .sink(receiveCompletion: { _ in }, receiveValue: { })
                 .store(in: &cancellables)
         } else {

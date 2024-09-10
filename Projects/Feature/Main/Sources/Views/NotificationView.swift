@@ -25,7 +25,7 @@ public final class NotificationView: UIView {
         return label
     }()
     
-    private let switchControl = {
+    let switchControl = {
         let view = UISwitch()
         view.onTintColor = Colors.primary
         return view

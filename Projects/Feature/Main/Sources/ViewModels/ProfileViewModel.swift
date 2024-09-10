@@ -37,7 +37,7 @@ public final class ProfileViewModel: ViewModel {
     public init(localStorageService: LocalStorageProtocol) {
         self.localStorageService = localStorageService
         self.state = State(
-            nickname: CurrentValueSubject<String, Never>(localStorageService.userSettings.nickname)
+            nickname: .init(localStorageService.userSettings.nickname)
         )
         
         bindAction()
