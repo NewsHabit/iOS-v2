@@ -9,4 +9,5 @@ import Foundation
 
 extension Notification.Name {
     public static let OnboardingDidFinishNotification = Notification.Name("OnboardingDidFinishNotification")
+    public static let MyNewsHabitDataDidChangeNotification = Notification.Name("MyNewsHabitDataDidChangeNotification")
 }

@@ -1,8 +1,8 @@
 //
 //  ProfileViewModel.swift
-//  FeatureOnboardingInterface
+//  FeatureMain
 //
-//  Created by 지연 on 9/4/24.
+//  Created by 지연 on 9/6/24.
 //
 
 import Combine
@@ -16,7 +16,7 @@ public final class ProfileViewModel: ViewModel {
     
     public enum Action {
         case nicknameDidChange(nickname: String)
-        case nextButtonDidTap
+        case saveButtonDidTap
     }
     
     // MARK: - State
@@ -37,7 +37,7 @@ public final class ProfileViewModel: ViewModel {
     public init(localStorageService: LocalStorageProtocol) {
         self.localStorageService = localStorageService
         self.state = State(
-            nickname: CurrentValueSubject<String, Never>(localStorageService.userSettings.nickname)
+            nickname: .init(localStorageService.userSettings.nickname)
         )
         
         bindAction()
@@ -54,7 +54,7 @@ public final class ProfileViewModel: ViewModel {
         switch action {
         case let .nicknameDidChange(nickname):
             state.nickname.send(nickname)
-        case .nextButtonDidTap:
+        case .saveButtonDidTap:
             localStorageService.userSettings.nickname = state.nickname.value
         }
     }

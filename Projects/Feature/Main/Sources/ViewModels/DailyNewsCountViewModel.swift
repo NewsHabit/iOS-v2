@@ -1,8 +1,8 @@
 //
 //  DailyNewsCountViewModel.swift
-//  FeatureOnboarding
+//  FeatureMain
 //
-//  Created by 지연 on 9/5/24.
+//  Created by 지연 on 9/6/24.
 //
 
 import Combine
@@ -16,7 +16,7 @@ public final class DailyNewsCountViewModel: ViewModel {
     
     public enum Action {
         case dailyNewsCountDidSelect(count: DailyNewsCountType)
-        case doneButtonDidTap
+        case saveButtonDidTap
     }
     
     // MARK: - State
@@ -58,8 +58,12 @@ public final class DailyNewsCountViewModel: ViewModel {
         switch action {
         case let .dailyNewsCountDidSelect(count: count):
             updateCategoryCellViewModel(for: count)
-        case .doneButtonDidTap:
+        case .saveButtonDidTap:
             saveDailyNewsCount()
+            NotificationCenter.default.post(
+                name: .MyNewsHabitDataDidChangeNotification,
+                object: nil
+            )
         }
     }
     

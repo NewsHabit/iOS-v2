@@ -28,12 +28,12 @@ public final class ProfileView: UIView {
         return label
     }()
     
-    private lazy var nicknameInputField = NewsHabitInputField(
+    lazy var nicknameInputField = NewsHabitInputField(
         maxLength: maxNicknameLength,
         placeholder: "닉네임"
     )
     
-    let doneButton = NewsHabitConfirmButton(title: "완료")
+    let saveButton = NewsHabitConfirmButton(title: "저장")
     
     // MARK: - Init
     
@@ -66,10 +66,10 @@ public final class ProfileView: UIView {
                 .height(44)
                 .grow(1)
             
-            flex.addItem(doneButton)
+            flex.addItem(saveButton)
                 .minHeight(56)
                 .cornerRadius(8)
-                .marginBottom(50)
+                .marginBottom(20)
         }
     }
 }

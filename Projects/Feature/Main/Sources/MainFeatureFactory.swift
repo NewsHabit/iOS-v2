@@ -8,12 +8,18 @@
 import UIKit
 
 import Core
+import Domain
 
-public class MainFeatureFactory {
-    private let localStorage: LocalStorageProtocol
+public final class MainFeatureFactory {
+    private let localStorageService: LocalStorageProtocol
+    private let notificationService: NotificationProtocol
     
-    public init(localStorage: LocalStorageProtocol) {
-        self.localStorage = localStorage
+    public init(
+        localStorageService: LocalStorageProtocol,
+        notificationService: NotificationProtocol
+    ) {
+        self.localStorageService = localStorageService
+        self.notificationService = notificationService
     }
     
     public func makeHomeViewController() -> UIViewController {
@@ -25,6 +31,10 @@ public class MainFeatureFactory {
     }
     
     public func makeSettingsViewController() -> UIViewController {
-        return SettingsViewController()
+        let viewFactory = SettingsViewFactory(
+            localStorageService: localStorageService,
+            notificationService: notificationService
+        )
+        return SettingsViewController(viewFactory: viewFactory)
     }
 }

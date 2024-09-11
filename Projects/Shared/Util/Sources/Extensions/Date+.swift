@@ -74,3 +74,11 @@ extension Date {
         return formatter.string(from: self)
     }
 }
+
+extension String {
+    /// "hh:mm a"
+    public func toTimeAsDate() -> Date? {
+        let formatter = DateFormatterCache.shared.formatter(for: DateFormat.timeWithPeriod)
+        return formatter.date(from: self)
+    }
+}

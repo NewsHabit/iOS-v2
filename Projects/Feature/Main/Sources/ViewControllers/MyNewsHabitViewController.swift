@@ -7,14 +7,37 @@
 
 import UIKit
 
+import Core
 import Shared
 
 public final class MyNewsHabitViewController: BaseViewController<MyNewsHabitView> {
+    private let localStorageService: LocalStorageProtocol
+    private let viewFactory: MyNewsHabitViewFactory
+    
+    // MARK: - Init
+    
+    public init(localStorageService: LocalStorageProtocol, viewFactory: MyNewsHabitViewFactory) {
+        self.localStorageService = localStorageService
+        self.viewFactory = viewFactory
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavigationBar()
         setupDelegate()
+        setupObserver()
     }
     
     private func setupNavigationBar() {
@@ -26,6 +49,19 @@ public final class MyNewsHabitViewController: BaseViewController<MyNewsHabitView
         contentView.delegate = self
         contentView.dataSource = self
     }
+    
+    private func setupObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMyNewsHabitDataDidChange),
+            name: .MyNewsHabitDataDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleMyNewsHabitDataDidChange() {
+        contentView.reloadData()
+    }
 }
 
 extension MyNewsHabitViewController: UITableViewDelegate {
@@ -35,8 +71,8 @@ extension MyNewsHabitViewController: UITableViewDelegate {
     
     private func viewController(for myNewsHabitType: MyNewsHabitType) -> UIViewController {
         switch myNewsHabitType {
-        case .category:         return CategoryViewController()
-        case .dailyNewsCount:   return DailyNewsCountViewController()
+        case .category:         return viewFactory.makeCategoryViewController()
+        case .dailyNewsCount:   return viewFactory.makeDailyNewsCountViewController()
         }
     }
 }
@@ -51,7 +87,21 @@ extension MyNewsHabitViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(for: indexPath, cellType: MyNewsHabitCell.self)
-        cell.configure(with: MyNewsHabitType.allCases[indexPath.row])
+        let type = MyNewsHabitType.allCases[indexPath.row]
+        cell.configure(title: type.title, description: description(for: type))
         return cell
+    }
+    
+    private func description(for type: MyNewsHabitType) -> String {
+        switch type {
+        case .category:
+            let categories = localStorageService.userSettings.selectedCategories
+            return categories.count > 1 ?
+            "\(categories[0].name) 외 \(categories.count - 1)개" :
+            categories[0].name
+        case .dailyNewsCount:
+            let count = localStorageService.userSettings.dailyNewsCount
+            return "\(count.rawValue)개"
+        }
     }
 }

@@ -1,8 +1,8 @@
 //
 //  CategoryViewModel.swift
-//  FeatureOnboarding
+//  FeatureMain
 //
-//  Created by 지연 on 9/5/24.
+//  Created by 지연 on 9/6/24.
 //
 
 import Combine
@@ -16,7 +16,7 @@ public final class CategoryViewModel: ViewModel {
     
     public enum Action {
         case categoryDidSelect(category: CategoryType)
-        case nextButtonDidTap
+        case saveButtonDidTap
     }
     
     // MARK: - State
@@ -58,8 +58,12 @@ public final class CategoryViewModel: ViewModel {
         switch action {
         case let .categoryDidSelect(category: category):
             updateCategoryCellViewModel(for: category)
-        case .nextButtonDidTap:
+        case .saveButtonDidTap:
             saveSelectedCategories()
+            NotificationCenter.default.post(
+                name: .MyNewsHabitDataDidChangeNotification,
+                object: nil
+            )
         }
     }
     

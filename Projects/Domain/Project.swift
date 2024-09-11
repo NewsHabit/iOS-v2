@@ -7,7 +7,8 @@ let domainTargets: [Target] = [
         factory: .init(
             dependencies: [
                 .core,
-                .domain(implements: .News)
+                .domain(implements: .News),
+                .domain(implements: .Notification)
             ]
         )
     )

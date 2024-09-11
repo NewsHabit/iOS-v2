@@ -10,6 +10,21 @@ import UIKit
 import Shared
 
 public final class SettingsViewController: BaseViewController<SettingsView> {
+    private let viewFactory: SettingsViewFactory
+    
+    // MARK: - Init
+    
+    public init(viewFactory: SettingsViewFactory) {
+        self.viewFactory = viewFactory
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,10 +52,10 @@ extension SettingsViewController: UITableViewDelegate {
     
     private func viewController(for settingsType: SettingsType) -> UIViewController {
         switch settingsType {
-        case .profile:      return ProfileViewController()
-        case .myNewsHabit:  return MyNewsHabitViewController()
-        case .notification: return NotificationViewController()
-        case .developer:    return DeveloperViewController()
+        case .profile:      return viewFactory.makeProfileViewController()
+        case .myNewsHabit:  return viewFactory.makeMyNewsHabitViewController()
+        case .notification: return viewFactory.makeNotificationViewController()
+        case .developer:    return viewFactory.makeDeveloperViewController()
         }
     }
 }
