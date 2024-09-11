@@ -10,6 +10,10 @@ import UIKit
 
 import Shared
 
+protocol NotificationDelegate: AnyObject {
+    func notificationTimeDidUpdate(_ time: Date)
+}
+
 public final class NotificationViewController: BaseViewController<NotificationView> {
     private let viewModel: NotificationViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -65,6 +69,11 @@ public final class NotificationViewController: BaseViewController<NotificationVi
                 switchControl.isOn = isEnabled
                 timeLabel.isHidden = !isEnabled
             }.store(in: &cancellables)
+        
+        viewModel.state.notificationTime
+            .sink { [weak self] time in
+                self?.timeLabel.text = time
+            }.store(in: &cancellables)
     }
     
     // MARK: - Action Methods
@@ -74,7 +83,15 @@ public final class NotificationViewController: BaseViewController<NotificationVi
     }
     
     @objc private func handleTimeLabelTap() {
-        present(NotificationTimeViewController(), animated: false)
+        let notificationTimeViewController = NotificationTimeViewController()
+        notificationTimeViewController.delegate = self
+        present(notificationTimeViewController, animated: false)
+    }
+}
+
+extension NotificationViewController: NotificationDelegate {
+    func notificationTimeDidUpdate(_ time: Date) {
+        viewModel.send(.notificationTimeDidUpdate(time: time))
     }
 }
 

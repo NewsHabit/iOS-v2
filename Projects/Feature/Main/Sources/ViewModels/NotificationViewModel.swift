@@ -16,6 +16,7 @@ public final class NotificationViewModel: ViewModel {
     
     public enum Action {
         case switchControlDidTap
+        case notificationTimeDidUpdate(time: Date)
     }
     
     // MARK: - Struct
@@ -59,12 +60,19 @@ public final class NotificationViewModel: ViewModel {
         case .switchControlDidTap:
             var isNotificationEnabled = state.isNotificationEnabled.value
             isNotificationEnabled.toggle()
-            notificationService.updateNotificationSettings(
-                isEnabled: isNotificationEnabled,
-                time: state.notificationTime.value
-            )
             state.isNotificationEnabled.send(isNotificationEnabled)
+            updateNotification()
+        case let .notificationTimeDidUpdate(time: time):
+            state.notificationTime.send(time.formatAsTimeWithPeriod())
+            updateNotification()
         }
+    }
+    
+    private func updateNotification() {
+        notificationService.updateNotificationSettings(
+            isEnabled: state.isNotificationEnabled.value,
+            time: state.notificationTime.value
+        )
     }
     
     public func send(_ action: Action) {
