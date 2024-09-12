@@ -26,11 +26,11 @@ public final class MainFeatureFactory {
     }
     
     public func makeHomeViewController() -> UIViewController {
-        let dailyNewsViewModel = DailyNewsViewModel(
+        let viewModel = HomeViewModel(
             localStorageService: localStorageService,
             newsService: newsService
         )
-        return HomeViewController(dailyNewsViewModel: dailyNewsViewModel)
+        return HomeViewController(viewModel: viewModel)
     }
     
     public func makeHotViewController() -> UIViewController {

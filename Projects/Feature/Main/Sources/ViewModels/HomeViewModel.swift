@@ -1,5 +1,5 @@
 //
-//  DailyNewsViewModel.swift
+//  HomeViewModel.swift
 //  FeatureMain
 //
 //  Created by 지연 on 9/12/24.
@@ -12,17 +12,20 @@ import Core
 import Domain
 import Shared
 
-public final class DailyNewsViewModel: ViewModel {
+public final class HomeViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
-        
+        case newsCellDidTap(index: Int)
     }
     
     // MARK: - State
     
     public struct State {
+        var totalDaysAllNewsRead: CurrentValueSubject<Int, Never>
         var cellViewModels: CurrentValueSubject<[DailyNewsCellViewModel], Never>
+        var selectedNewsURL: CurrentValueSubject<URL?, Never>
+        var isTodayAllRead: CurrentValueSubject<Bool, Never>
     }
     
     // MARK: - Property
@@ -38,9 +41,14 @@ public final class DailyNewsViewModel: ViewModel {
     public init(localStorageService: LocalStorageProtocol, newsService: NewsProtocol) {
         self.localStorageService = localStorageService
         self.newsService = newsService
-        self.state = State(cellViewModels: .init([]))
-        updateCellViewModels()
+        self.state = State(
+            totalDaysAllNewsRead: .init(localStorageService.newsData.totalDaysAllNewsRead),
+            cellViewModels: .init([]),
+            selectedNewsURL: .init(nil),
+            isTodayAllRead: .init(false)
+        )
         
+        fetchDailyNews()
         bindAction()
     }
     
@@ -53,10 +61,13 @@ public final class DailyNewsViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
+        case let .newsCellDidTap(index):
+            markNewsAsRead(at: index)
+            updateSelectedNewsURL(at: index)
         }
     }
     
-    private func updateCellViewModels() {
+    private func fetchDailyNews() {
         let categories = localStorageService.userSettings.selectedCategories
             .map { $0.apiIdentifier }
         let count = localStorageService.userSettings.dailyNewsCount.rawValue
@@ -77,6 +88,26 @@ public final class DailyNewsViewModel: ViewModel {
                 }
                 state.cellViewModels.send(cellViewModels)
             }).store(in: &cancellables)
+    }
+    
+    private func markNewsAsRead(at index: Int) {
+        var cellViewModels = state.cellViewModels.value
+        
+        guard !cellViewModels[index].isRead else { return }
+        
+        cellViewModels[index].isRead = true
+        state.cellViewModels.send(cellViewModels)
+        updateTodayAllReadStatus()
+    }
+    
+    private func updateTodayAllReadStatus() {
+        let allItemsRead = state.cellViewModels.value.allSatisfy { $0.isRead }
+        state.isTodayAllRead.send(allItemsRead)
+    }
+    
+    private func updateSelectedNewsURL(at index: Int) {
+        let urlString = state.cellViewModels.value[index].dailyNews.naverUrl
+        state.selectedNewsURL.send(URL(string: urlString))
     }
     
     public func send(_ action: Action) {

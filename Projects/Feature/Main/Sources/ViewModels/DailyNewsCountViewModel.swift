@@ -56,7 +56,7 @@ public final class DailyNewsCountViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
-        case let .dailyNewsCountDidSelect(count: count):
+        case let .dailyNewsCountDidSelect(count):
             updateCellViewModels(for: count)
         case .saveButtonDidTap:
             saveDailyNewsCount()

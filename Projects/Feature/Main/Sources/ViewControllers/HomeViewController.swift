@@ -11,14 +11,14 @@ import UIKit
 import Shared
 
 public final class HomeViewController: BaseViewController<HomeView> {
-    private let dailyNewsViewModel: DailyNewsViewModel
+    private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
     private var dataSource: UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>!
     
     // MARK: - Init
     
-    public init(dailyNewsViewModel: DailyNewsViewModel) {
-        self.dailyNewsViewModel = dailyNewsViewModel
+    public init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,15 +32,19 @@ public final class HomeViewController: BaseViewController<HomeView> {
         super.viewDidLoad()
         
         setupNavigationBar()
+        setupDelegate()
         setupDataSource()
         setupBinding()
     }
     
     // MARK: - Setup Methods
     
+    private func setupDelegate() {
+        dailyNewsTableView.delegate = self
+    }
+    
     private func setupNavigationBar() {
         setLargeTitle("사용자님의 뉴빗", Colors.gray01)
-        setSubTitle("👀 지금까지 0일 완독했어요!", Colors.gray01)
         setBackgroundColor(Colors.gray08)
     }
     
@@ -58,10 +62,32 @@ public final class HomeViewController: BaseViewController<HomeView> {
     }
     
     private func setupBinding() {
-        dailyNewsViewModel.state.cellViewModels
+        viewModel.state.totalDaysAllNewsRead
+            .sink { [weak self] totalDaysAllNewsRead in
+                guard let self = self else { return }
+                setSubTitle("👀 지금까지 \(totalDaysAllNewsRead)일 완독했어요!", Colors.gray01)
+            }.store(in: &cancellables)
+        
+        viewModel.state.cellViewModels
             .sink { [weak self] cellViewModels in
                 guard let self = self else { return }
                 updateDataSource(with: cellViewModels)
+            }.store(in: &cancellables)
+        
+        viewModel.state.selectedNewsURL
+            .sink { [weak self] newsURL in
+                guard let self = self, let url = newsURL else { return }
+                navigationController?.pushViewController(
+                    NewsViewController(url: url),
+                    animated: true
+                )
+            }.store(in: &cancellables)
+        
+        viewModel.state.isTodayAllRead
+            .sink { [weak self] isTodayAllRead in
+                guard let self = self else { return }
+                messageContainer.isHidden = !isTodayAllRead
+                dailyNewsView.setNeedsLayout()
             }.store(in: &cancellables)
     }
     
@@ -73,8 +99,22 @@ public final class HomeViewController: BaseViewController<HomeView> {
     }
 }
 
+extension HomeViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.send(.newsCellDidTap(index: indexPath.row))
+    }
+}
+
 private extension HomeViewController {
+    var dailyNewsView: DailyNewsView {
+        contentView.dailyNewsView
+    }
+    
     var dailyNewsTableView: UITableView {
         contentView.dailyNewsView.tableView
+    }
+    
+    var messageContainer: UIView {
+        contentView.dailyNewsView.messageContainer
     }
 }

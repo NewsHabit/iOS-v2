@@ -63,20 +63,25 @@ public final class DailyNewsView: UIView {
     }
     
     private func setupLayout() {
-        messageContainer.pin
-            .top(10)
-            .horizontally(15)
-            .height(56)
-        
-        messageLabel.pin
-            .left(20)
-            .vCenter()
-            .sizeToFit()
-        
-        tableView.pin
-            .below(of: messageContainer)
-            .marginTop(5)
-            .horizontally()
-            .bottom()
+        if !messageContainer.isHidden {
+            messageContainer.pin
+                .top(10)
+                .horizontally(15)
+                .height(56)
+            
+            messageLabel.pin
+                .left(20)
+                .vCenter()
+                .sizeToFit()
+            
+            tableView.pin
+                .below(of: messageContainer)
+                .marginTop(5)
+                .horizontally()
+                .bottom()
+        } else {
+            tableView.pin
+                .all()
+        }
     }
 }

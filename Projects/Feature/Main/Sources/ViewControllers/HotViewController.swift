@@ -83,7 +83,7 @@ public final class HotViewController: BaseViewController<HotView> {
                 refreshControl.endRefreshing()
             }.store(in: &cancellables)
         
-        viewModel.state.newsURL
+        viewModel.state.selectedNewsURL
             .sink { [weak self] newsURL in
                 guard let self = self, let url = newsURL else { return }
                 navigationController?.pushViewController(

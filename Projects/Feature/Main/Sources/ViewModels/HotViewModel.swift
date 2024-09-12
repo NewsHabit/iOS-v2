@@ -27,7 +27,7 @@ public final class HotViewModel: ViewModel {
         var fullDateTime: CurrentValueSubject<String, Never>
         var cellViewModels: CurrentValueSubject<[HotNews], Never>
         var isRefreshing: CurrentValueSubject<Bool, Never>
-        var newsURL: CurrentValueSubject<URL?, Never>
+        var selectedNewsURL: CurrentValueSubject<URL?, Never>
     }
     
     // MARK: - Property
@@ -47,10 +47,10 @@ public final class HotViewModel: ViewModel {
             fullDateTime: .init(Date().formatAsFullDateTime()),
             cellViewModels: .init([]),
             isRefreshing: .init(false),
-            newsURL: .init(nil)
+            selectedNewsURL: .init(nil)
         )
-        updateCellViewModels()
         
+        fetchHotNews()
         bindAction()
     }
     
@@ -68,7 +68,7 @@ public final class HotViewModel: ViewModel {
         case .refreshControlDidTrigger:
             refresh()
         case let .cellDidTap(index):
-            updateNewsURL(at: index)
+            updateSelectedNewsURL(at: index)
         }
     }
     
@@ -86,10 +86,10 @@ public final class HotViewModel: ViewModel {
         if currentFullDateTime == state.fullDateTime.value { return }
         
         state.fullDateTime.send(currentFullDateTime)
-        updateCellViewModels()
+        fetchHotNews()
     }
     
-    private func updateCellViewModels() {
+    private func fetchHotNews() {
         newsService.getHotNews()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -106,9 +106,9 @@ public final class HotViewModel: ViewModel {
             }).store(in: &cancellables)
     }
     
-    private func updateNewsURL(at index: Int) {
+    private func updateSelectedNewsURL(at index: Int) {
         let urlString = state.cellViewModels.value[index].naverUrl
-        state.newsURL.send(URL(string: urlString))
+        state.selectedNewsURL.send(URL(string: urlString))
     }
     
     public func send(_ action: Action) {
