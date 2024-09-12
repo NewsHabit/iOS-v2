@@ -32,17 +32,18 @@ public final class HotViewController: BaseViewController<HotView> {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationBar()
+        setLargeTitle("🔥 지금 뜨는 뉴스")
         setupDataSource()
         setupBinding()
     }
     
-    // MARK: - Setup Methods
-    
-    private func setupNavigationBar() {
-        setLargeTitle("🔥 지금 뜨는 뉴스")
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         setSubTitle("\(Date().formatAsFullDateTime()) 기준", Colors.gray04)
     }
+    
+    // MARK: - Setup Methods
     
     private func setupDataSource() {
         dataSource = UITableViewDiffableDataSource<Section, HotNews>(
