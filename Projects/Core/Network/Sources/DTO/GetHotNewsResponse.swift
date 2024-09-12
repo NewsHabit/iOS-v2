@@ -1,6 +1,6 @@
 //
 //  GetHotNewsResponse.swift
-//  CoreNetworkInterface
+//  CoreNetwork
 //
 //  Created by 지연 on 9/12/24.
 //

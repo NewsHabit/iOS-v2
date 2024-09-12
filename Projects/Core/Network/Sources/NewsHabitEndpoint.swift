@@ -1,20 +1,22 @@
 //
-//  NewsAPIEndpoint.swift
-//  CoreNetworkInterface
+//  NewsHabitEndpoint.swift
+//  CoreNetwork
 //
 //  Created by 지연 on 9/12/24.
 //
 
 import Foundation
 
+import CoreNetworkInterface
+
 import Alamofire
 
-public enum NewsAPIEndpoint<R: Decodable> {
+public enum NewsHabitEndpoint<R: Decodable> {
     case getDailyNews(categories: String, cnt: Int)
     case getHotNews
 }
 
-extension NewsAPIEndpoint: EndpointSpecifiable {
+extension NewsHabitEndpoint: EndpointSpecifiable {
     public typealias Response = R
     
     public var path: String {

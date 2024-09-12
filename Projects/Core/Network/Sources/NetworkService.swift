@@ -1,5 +1,5 @@
 //
-//  NewsAPIService.swift
+//  NetworkService.swift
 //  CoreNetwork
 //
 //  Created by 지연 on 9/12/24.
@@ -12,7 +12,7 @@ import CoreNetworkInterface
 
 import Alamofire
 
-public final class NewsAPIService: NewsAPIProtocol {
+public final class NetworkService: NetworkProtocol {
     private let baseURL: String
     private let session: Session
     
