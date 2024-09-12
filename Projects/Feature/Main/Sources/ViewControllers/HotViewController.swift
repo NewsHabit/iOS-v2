@@ -35,6 +35,7 @@ public final class HotViewController: BaseViewController<HotView> {
         setLargeTitle("🔥 지금 뜨는 뉴스")
         setupDataSource()
         setupBinding()
+        setupAction()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -70,6 +71,12 @@ public final class HotViewController: BaseViewController<HotView> {
                 guard let self = self else { return }
                 updateDataSource(with: cellViewModels)
             }.store(in: &cancellables)
+        
+        viewModel.state.isRefreshing
+            .sink { [weak self] isRefreshing in
+                guard let self = self, !isRefreshing else { return }
+                refreshControl.endRefreshing()
+            }.store(in: &cancellables)
     }
     
     private func updateDataSource(with cellViewModels: [HotNews]) {
@@ -77,6 +84,14 @@ public final class HotViewController: BaseViewController<HotView> {
         snapshot.appendSections([.main])
         snapshot.appendItems(cellViewModels)
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func setupAction() {
+        refreshControl.addTarget(self, action: #selector(handleRefrechControl), for: .valueChanged)
+    }
+    
+    @objc private func handleRefrechControl() {
+        viewModel.send(.refreshControlDidTrigger)
     }
 }
 

@@ -17,6 +17,7 @@ public final class HotNewsViewModel: ViewModel {
     
     public enum Action {
         case viewWillAppear
+        case refreshControlDidTrigger
     }
     
     // MARK: - State
@@ -24,6 +25,7 @@ public final class HotNewsViewModel: ViewModel {
     public struct State {
         var fullDateTime: CurrentValueSubject<String, Never>
         var cellViewModels: CurrentValueSubject<[HotNews], Never>
+        var isRefreshing: CurrentValueSubject<Bool, Never>
     }
     
     // MARK: - Property
@@ -41,7 +43,8 @@ public final class HotNewsViewModel: ViewModel {
         self.newsService = newsService
         self.state = State(
             fullDateTime: .init(Date().formatAsFullDateTime()),
-            cellViewModels: .init([])
+            cellViewModels: .init([]),
+            isRefreshing: .init(false)
         )
         updateCellViewModels()
         
@@ -59,6 +62,16 @@ public final class HotNewsViewModel: ViewModel {
         switch action {
         case .viewWillAppear:
             updateState()
+        case .refreshControlDidTrigger:
+            refresh()
+        }
+    }
+    
+    private func refresh() {
+        state.isRefreshing.send(true)
+        updateState()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.state.isRefreshing.send(false)
         }
     }
     
