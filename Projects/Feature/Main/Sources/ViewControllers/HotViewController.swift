@@ -12,13 +12,13 @@ import Domain
 import Shared
 
 public final class HotViewController: BaseViewController<HotView> {
-    private let viewModel: HotNewsViewModel
+    private let viewModel: HotViewModel
     private var cancellables = Set<AnyCancellable>()
     private var dataSource: UITableViewDiffableDataSource<Section, HotNews>!
     
     // MARK: - Init
     
-    public init(viewModel: HotNewsViewModel) {
+    public init(viewModel: HotViewModel) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
@@ -33,6 +33,7 @@ public final class HotViewController: BaseViewController<HotView> {
         super.viewDidLoad()
         
         setLargeTitle("🔥 지금 뜨는 뉴스")
+        setupDelegate()
         setupDataSource()
         setupBinding()
         setupAction()
@@ -45,6 +46,10 @@ public final class HotViewController: BaseViewController<HotView> {
     }
     
     // MARK: - Setup Methods
+    
+    private func setupDelegate() {
+        hotNewsTableView.delegate = self
+    }
     
     private func setupDataSource() {
         dataSource = UITableViewDiffableDataSource<Section, HotNews>(
@@ -77,6 +82,15 @@ public final class HotViewController: BaseViewController<HotView> {
                 guard let self = self, !isRefreshing else { return }
                 refreshControl.endRefreshing()
             }.store(in: &cancellables)
+        
+        viewModel.state.newsURL
+            .sink { [weak self] newsURL in
+                guard let self = self, let url = newsURL else { return }
+                navigationController?.pushViewController(
+                    NewsViewController(url: url),
+                    animated: true
+                )
+            }.store(in: &cancellables)
     }
     
     private func updateDataSource(with cellViewModels: [HotNews]) {
@@ -92,6 +106,12 @@ public final class HotViewController: BaseViewController<HotView> {
     
     @objc private func handleRefrechControl() {
         viewModel.send(.refreshControlDidTrigger)
+    }
+}
+
+extension HotViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.send(.cellDidTap(index: indexPath.row))
     }
 }
 

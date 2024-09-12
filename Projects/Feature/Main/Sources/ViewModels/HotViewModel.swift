@@ -1,5 +1,5 @@
 //
-//  HotNewsViewModel.swift
+//  HotViewModel.swift
 //  FeatureMain
 //
 //  Created by 지연 on 9/12/24.
@@ -12,12 +12,13 @@ import Core
 import Domain
 import Shared
 
-public final class HotNewsViewModel: ViewModel {
+public final class HotViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
         case viewWillAppear
         case refreshControlDidTrigger
+        case cellDidTap(index: Int)
     }
     
     // MARK: - State
@@ -26,6 +27,7 @@ public final class HotNewsViewModel: ViewModel {
         var fullDateTime: CurrentValueSubject<String, Never>
         var cellViewModels: CurrentValueSubject<[HotNews], Never>
         var isRefreshing: CurrentValueSubject<Bool, Never>
+        var newsURL: CurrentValueSubject<URL?, Never>
     }
     
     // MARK: - Property
@@ -44,7 +46,8 @@ public final class HotNewsViewModel: ViewModel {
         self.state = State(
             fullDateTime: .init(Date().formatAsFullDateTime()),
             cellViewModels: .init([]),
-            isRefreshing: .init(false)
+            isRefreshing: .init(false),
+            newsURL: .init(nil)
         )
         updateCellViewModels()
         
@@ -64,6 +67,8 @@ public final class HotNewsViewModel: ViewModel {
             updateState()
         case .refreshControlDidTrigger:
             refresh()
+        case let .cellDidTap(index):
+            updateNewsURL(at: index)
         }
     }
     
@@ -99,6 +104,11 @@ public final class HotNewsViewModel: ViewModel {
                 let cellViewModels = response.hotNewsResponseDtoList
                 state.cellViewModels.send(cellViewModels)
             }).store(in: &cancellables)
+    }
+    
+    private func updateNewsURL(at index: Int) {
+        let urlString = state.cellViewModels.value[index].naverUrl
+        state.newsURL.send(URL(string: urlString))
     }
     
     public func send(_ action: Action) {
