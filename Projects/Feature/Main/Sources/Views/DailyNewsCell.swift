@@ -10,6 +10,7 @@ import UIKit
 import Shared
 
 import FlexLayout
+import Kingfisher
 import PinLayout
 
 final class DailyNewsCell: UITableViewCell, Reusable {
@@ -34,7 +35,6 @@ final class DailyNewsCell: UITableViewCell, Reusable {
     
     private let titleLabel = {
         let label = UILabel()
-        label.text = "기사 제목 기사 제목 기사 제목 기사 제목 기사 제목"
         label.font = Fonts.semiBold(size: 14.5)
         label.textColor = Colors.gray08
         label.lineBreakMode = .byTruncatingTail
@@ -43,7 +43,6 @@ final class DailyNewsCell: UITableViewCell, Reusable {
     
     private let categoryLabel = {
         let label = UILabel()
-        label.text = "카테고리"
         label.textColor = Colors.gray01
         label.textAlignment = .center
         label.font = Fonts.bold(size: 10.0)
@@ -56,7 +55,6 @@ final class DailyNewsCell: UITableViewCell, Reusable {
     
     private let descriptionLabel = {
         let label = UILabel()
-        label.text = "기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약"
         label.font = Fonts.regular(size: 12.0)
         label.textColor = Colors.gray04
         label.numberOfLines = 3
@@ -66,7 +64,8 @@ final class DailyNewsCell: UITableViewCell, Reusable {
     
     private let thumbnailImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = Colors.gray04
         return imageView
     }()
@@ -106,6 +105,7 @@ final class DailyNewsCell: UITableViewCell, Reusable {
                         flex.addItem()
                             .direction(.column)
                             .justifyContent(.spaceBetween)
+                            .grow(1)
                             .shrink(1)
                             .define { flex in
                                 flex.addItem(titleView)
@@ -129,7 +129,15 @@ final class DailyNewsCell: UITableViewCell, Reusable {
             categoryLabel.widthAnchor.constraint(equalToConstant: 50),
             categoryLabel.heightAnchor.constraint(equalToConstant: 18)
         ])
-        
-        layoutIfNeeded()
+    }
+    
+    // MARK: - Configure
+    
+    public func configure(with viewModel: DailyNewsCellViewModel) {
+        readStateView.isHidden = viewModel.isRead
+        titleLabel.text = viewModel.dailyNews.title
+        categoryLabel.text = CategoryType.convertAPIIdentifier(from: viewModel.dailyNews.category) 
+        descriptionLabel.text = viewModel.dailyNews.description
+        thumbnailImageView.kf.setImage(with: URL(string: viewModel.dailyNews.imgLink))
     }
 }

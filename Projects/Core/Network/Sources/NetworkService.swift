@@ -9,6 +9,7 @@ import Combine
 import Foundation
 
 import CoreNetworkInterface
+import Shared
 
 import Alamofire
 

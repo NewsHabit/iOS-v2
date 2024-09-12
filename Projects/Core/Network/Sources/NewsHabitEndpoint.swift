@@ -8,11 +8,12 @@
 import Foundation
 
 import CoreNetworkInterface
+import Shared
 
 import Alamofire
 
 public enum NewsHabitEndpoint<R: Decodable> {
-    case getDailyNews(categories: String, count: Int)
+    case getDailyNews(categories: [String], count: Int)
     case getHotNews
 }
 

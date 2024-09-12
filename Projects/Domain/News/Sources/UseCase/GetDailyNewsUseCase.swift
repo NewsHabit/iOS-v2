@@ -17,8 +17,8 @@ public struct GetDailyNewsUseCase: UseCase {
         self.newsService = newsService
     }
     
-    public func execute(_ input: (categories: String, count: Int)) 
-    -> AnyPublisher<[DailyNews], Error> {
+    public func execute(_ input: (categories: [String], count: Int)) 
+    -> AnyPublisher<DailyNewsResponse, Error> {
         return newsService.getDailyNews(categories: input.categories, count: input.count)
     }
 }

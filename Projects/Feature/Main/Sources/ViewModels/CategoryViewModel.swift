@@ -57,7 +57,7 @@ public final class CategoryViewModel: ViewModel {
     private func handleAction(_ action: Action) {
         switch action {
         case let .categoryDidSelect(category: category):
-            updateCategoryCellViewModel(for: category)
+            updateCellViewModels(for: category)
         case .saveButtonDidTap:
             saveSelectedCategories()
             NotificationCenter.default.post(
@@ -67,7 +67,7 @@ public final class CategoryViewModel: ViewModel {
         }
     }
     
-    private func updateCategoryCellViewModel(for category: CategoryType) {
+    private func updateCellViewModels(for category: CategoryType) {
         let updatedCellViewModels = state.cellViewModels.value.map { cellViewModel in
             if cellViewModel.category == category {
                 var updatedViewModel = cellViewModel
