@@ -12,7 +12,7 @@ import CoreNetworkInterface
 import Alamofire
 
 public enum NewsHabitEndpoint<R: Decodable> {
-    case getDailyNews(categories: String, cnt: Int)
+    case getDailyNews(categories: String, count: Int)
     case getHotNews
 }
 
@@ -37,8 +37,8 @@ extension NewsHabitEndpoint: EndpointSpecifiable {
     
     public var parameters: [String: Any]? {
         switch self {
-        case let .getDailyNews(categories, cnt):
-            return ["categories": categories, "cnt": cnt]
+        case let .getDailyNews(categories, count):
+            return ["categories": categories, "cnt": count]
         case .getHotNews:
             return nil
         }
