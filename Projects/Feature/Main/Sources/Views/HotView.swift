@@ -30,8 +30,6 @@ public final class HotView: UIView {
         super.init(frame: frame)
         
         setupView()
-        // 임시
-        tableView.dataSource = self
     }
     
     required init?(coder: NSCoder) {
@@ -46,16 +44,5 @@ public final class HotView: UIView {
     
     private func setupView() {
         addSubview(tableView)
-    }
-}
-
-extension HotView: UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 15
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(for: indexPath, cellType: HotNewsCell.self)
-        return cell
     }
 }

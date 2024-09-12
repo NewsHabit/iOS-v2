@@ -1,5 +1,5 @@
 //
-//  DailyNewsViewModel.swift
+//  HotNewsViewModel.swift
 //  FeatureMain
 //
 //  Created by 지연 on 9/12/24.
@@ -12,7 +12,7 @@ import Core
 import Domain
 import Shared
 
-public final class DailyNewsViewModel: ViewModel {
+public final class HotNewsViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
@@ -22,7 +22,7 @@ public final class DailyNewsViewModel: ViewModel {
     // MARK: - State
     
     public struct State {
-        var cellViewModels: CurrentValueSubject<[DailyNewsCellViewModel], Never>
+        var cellViewModels: CurrentValueSubject<[HotNews], Never>
     }
     
     // MARK: - Property
@@ -57,24 +57,18 @@ public final class DailyNewsViewModel: ViewModel {
     }
     
     private func updateCellViewModels() {
-        let categories = localStorageService.userSettings.selectedCategories
-            .map { $0.apiIdentifier }
-        let count = localStorageService.userSettings.dailyNewsCount.rawValue
-        
-        newsService.getDailyNews(categories: categories, count: count)
+        newsService.getHotNews()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    print("✅ Fetch daily news completed !")
+                    print("✅ Fetch hot news completed !")
                 case .failure(let error):
-                    print("Error fetching daily news: \(error)")
+                    print("Error fetching hot news: \(error)")
                 }
             }, receiveValue: { [weak self] response in
                 guard let self else { return }
-                let cellViewModels = response.recommendedNewsResponseDtoList.map {
-                    DailyNewsCellViewModel(dailyNews: $0, isRead: false)
-                }
+                let cellViewModels = response.hotNewsResponseDtoList
                 state.cellViewModels.send(cellViewModels)
             }).store(in: &cancellables)
     }

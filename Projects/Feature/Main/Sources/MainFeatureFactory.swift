@@ -34,7 +34,11 @@ public final class MainFeatureFactory {
     }
     
     public func makeHotViewController() -> UIViewController {
-        return HotViewController()
+        let viewModel = HotNewsViewModel(
+            localStorageService: localStorageService,
+            newsService: newsService
+        )
+        return HotViewController(viewModel: viewModel)
     }
     
     public func makeSettingsViewController() -> UIViewController {

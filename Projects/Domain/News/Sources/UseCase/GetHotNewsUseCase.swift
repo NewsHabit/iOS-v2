@@ -17,7 +17,7 @@ public struct GetHotNewsUseCase: UseCase {
         self.newsService = newsService
     }
     
-    public func execute(_ input: Void) -> AnyPublisher<[HotNews], Error> {
+    public func execute(_ input: Void) -> AnyPublisher<HotNewsResponse, Error> {
         return newsService.getHotNews()
     }
 }

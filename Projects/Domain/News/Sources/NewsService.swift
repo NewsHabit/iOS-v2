@@ -25,7 +25,7 @@ public class NewsService: NewsProtocol {
             .eraseToAnyPublisher()
     }
     
-    public func getHotNews() -> AnyPublisher<[HotNews], Error> {
+    public func getHotNews() -> AnyPublisher<HotNewsResponse, Error> {
         return networkService
             .execute(NewsHabitEndpoint.getHotNews)
             .eraseToAnyPublisher()

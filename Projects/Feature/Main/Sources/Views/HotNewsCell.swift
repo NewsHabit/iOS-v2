@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Domain
 import Shared
 
 import FlexLayout
@@ -17,7 +18,6 @@ final class HotNewsCell: UITableViewCell, Reusable {
     
     private let titleLabel = {
         let label = UILabel()
-        label.text = "기사 제목"
         label.font = Fonts.semiBold(size: 14.5)
         label.textColor = Colors.gray08
         label.lineBreakMode = .byTruncatingTail
@@ -26,7 +26,6 @@ final class HotNewsCell: UITableViewCell, Reusable {
     
     private let descriptionLabel = {
         let label = UILabel()
-        label.text = "기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약 기사 요약"
         label.font = Fonts.regular(size: 12.0)
         label.textColor = Colors.gray04
         label.numberOfLines = 3
@@ -36,7 +35,8 @@ final class HotNewsCell: UITableViewCell, Reusable {
     
     private let thumbnailImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = Colors.gray04
         return imageView
     }()
@@ -88,5 +88,13 @@ final class HotNewsCell: UITableViewCell, Reusable {
                     }
                 
             }
+    }
+    
+    // MARK: - Configure
+    
+    public func configure(with viewModel: HotNews) {
+        titleLabel.text = viewModel.title
+        descriptionLabel.text = viewModel.description
+        thumbnailImageView.kf.setImage(with: URL(string: viewModel.imgLink))
     }
 }
