@@ -16,10 +16,12 @@ final class MainViewControllerFactory: MainViewControllerFactoryProtocol {
     
     init(
         localStorageService: LocalStorageProtocol,
+        newsService: NewsProtocol,
         notificationService: NotificationProtocol
     ) {
         self.mainFeatureFactory = MainFeatureFactory(
             localStorageService: localStorageService,
+            newsService: newsService,
             notificationService: notificationService
         )
     }

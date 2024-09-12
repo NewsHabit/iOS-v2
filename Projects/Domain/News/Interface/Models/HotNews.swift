@@ -8,8 +8,8 @@
 import Foundation
 
 public struct HotNews: Codable {
-    let title: String
-    let naverUrl: String
-    let imgLink: String
-    let description: String
+    public let title: String
+    public let naverUrl: String
+    public let imgLink: String
+    public let description: String
 }

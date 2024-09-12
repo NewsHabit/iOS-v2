@@ -35,9 +35,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func launchMainView() {
+        let baseURL = "https://newshabit.org"
+        let newsService = NewsService(networkService: NetworkService(baseURL: baseURL))
         let notificationService = NotificationService(localStorageService: localStorageService)
         let mainViewControllerFactory = MainViewControllerFactory(
             localStorageService: localStorageService,
+            newsService: newsService,
             notificationService: notificationService
         )
         window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)

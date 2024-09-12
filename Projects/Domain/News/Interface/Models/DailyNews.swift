@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct DailyNews: Codable {
-    let title: String
-    let category: String
-    let naverUrl: String
-    let imgLink: String
-    let description: String
+public struct DailyNews: Codable, Hashable {
+    public let title: String
+    public let category: String
+    public let naverUrl: String
+    public let imgLink: String
+    public let description: String
 }

@@ -8,5 +8,5 @@
 import Foundation
 
 public struct HotNewsResponse: Codable {
-    let hotNewsResponseDtoList: [HotNews]
+    public let hotNewsResponseDtoList: [HotNews]
 }

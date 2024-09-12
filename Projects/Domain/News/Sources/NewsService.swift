@@ -18,7 +18,8 @@ public class NewsService: NewsProtocol {
         self.networkService = networkService
     }
     
-    public func getDailyNews(categories: String, count: Int) -> AnyPublisher<[DailyNews], Error> {
+    public func getDailyNews(categories: [String], count: Int)
+    -> AnyPublisher<DailyNewsResponse, Error> {
         return networkService
             .execute(NewsHabitEndpoint.getDailyNews(categories: categories,count: count))
             .eraseToAnyPublisher()

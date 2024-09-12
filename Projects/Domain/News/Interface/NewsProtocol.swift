@@ -9,6 +9,6 @@ import Combine
 import Foundation
 
 public protocol NewsProtocol {
-    func getDailyNews(categories: String, count: Int) -> AnyPublisher<[DailyNews], Error>
+    func getDailyNews(categories: [String], count: Int) -> AnyPublisher<DailyNewsResponse, Error>
     func getHotNews() -> AnyPublisher<[HotNews], Error>
 }

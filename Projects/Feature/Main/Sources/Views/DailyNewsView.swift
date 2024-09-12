@@ -43,8 +43,6 @@ public final class DailyNewsView: UIView {
         super.init(frame: frame)
         
         setupView()
-        // 임시
-        tableView.dataSource = self
     }
     
     @available(*, unavailable)
@@ -80,16 +78,5 @@ public final class DailyNewsView: UIView {
             .marginTop(5)
             .horizontally()
             .bottom()
-    }
-}
-
-extension DailyNewsView: UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(for: indexPath, cellType: DailyNewsCell.self)
-        return cell
     }
 }

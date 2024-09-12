@@ -57,7 +57,7 @@ public final class DailyNewsCountViewModel: ViewModel {
     private func handleAction(_ action: Action) {
         switch action {
         case let .dailyNewsCountDidSelect(count: count):
-            updateCategoryCellViewModel(for: count)
+            updateCellViewModels(for: count)
         case .saveButtonDidTap:
             saveDailyNewsCount()
             NotificationCenter.default.post(
@@ -67,7 +67,7 @@ public final class DailyNewsCountViewModel: ViewModel {
         }
     }
     
-    private func updateCategoryCellViewModel(for count: DailyNewsCountType) {
+    private func updateCellViewModels(for count: DailyNewsCountType) {
         let updatedCellViewModels = state.cellViewModels.value.map { cellViewModel in
             var updatedViewModel = cellViewModel
             updatedViewModel.isSelected = (cellViewModel.count == count)
