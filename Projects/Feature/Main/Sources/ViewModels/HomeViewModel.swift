@@ -16,6 +16,7 @@ public final class HomeViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
+        case viewDidLoad
         case newsCellDidTap(index: Int)
     }
     
@@ -23,7 +24,8 @@ public final class HomeViewModel: ViewModel {
     
     public struct State {
         var totalDaysAllNewsRead: CurrentValueSubject<Int, Never>
-        var cellViewModels: CurrentValueSubject<[DailyNewsCellViewModel], Never>
+        var dailyNewsCellViewModels: CurrentValueSubject<[DailyNewsCellViewModel], Never>
+        var monthlyRecordCellViewModels: CurrentValueSubject<[MonthlyRecordCellViewModel], Never>
         var selectedNewsURL: CurrentValueSubject<URL?, Never>
         var isTodayAllRead: CurrentValueSubject<Bool, Never>
     }
@@ -43,12 +45,12 @@ public final class HomeViewModel: ViewModel {
         self.newsService = newsService
         self.state = State(
             totalDaysAllNewsRead: .init(localStorageService.newsData.totalDaysAllNewsRead),
-            cellViewModels: .init([]),
+            dailyNewsCellViewModels: .init([]),
+            monthlyRecordCellViewModels: .init([]),
             selectedNewsURL: .init(nil),
             isTodayAllRead: .init(false)
         )
         
-        fetchDailyNews()
         bindAction()
     }
     
@@ -61,6 +63,9 @@ public final class HomeViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
+        case .viewDidLoad:
+            fetchDailyNews()
+            updateMonthlyRecordCellViewModels()
         case let .newsCellDidTap(index):
             markNewsAsRead(at: index)
             updateSelectedNewsURL(at: index)
@@ -86,27 +91,58 @@ public final class HomeViewModel: ViewModel {
                 let cellViewModels = response.recommendedNewsResponseDtoList.map {
                     DailyNewsCellViewModel(dailyNews: $0, isRead: false)
                 }
-                state.cellViewModels.send(cellViewModels)
+                state.dailyNewsCellViewModels.send(cellViewModels)
             }).store(in: &cancellables)
     }
     
+    private func updateMonthlyRecordCellViewModels() {
+        let calendar = Calendar.current
+        let date = Date()
+        let components = calendar.dateComponents([.year, .month], from: date)
+        guard let startOfMonth = calendar.date(from: components),
+              let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count 
+        else { return }
+        
+        let firstWeekday = calendar.component(.weekday, from: startOfMonth)
+        let year = components.year!
+        let month = components.month!
+        let today = calendar.dateComponents([.year, .month, .day], from: date)
+        
+        let cellViewModels = (1..<firstWeekday).map { _ in
+            MonthlyRecordCellViewModel(day: nil, isRead: false, isToday: false)
+        } + (1...daysInMonth).map { day in
+            let dayString = String(format: "%02d", day)
+            let isRead = localStorageService.newsData.monthlyCompletionDates.contains(dayString)
+            let isToday = today.year == year && today.month == month && today.day == day
+            return MonthlyRecordCellViewModel(day: dayString, isRead: isRead, isToday: isToday)
+        }
+        
+        state.monthlyRecordCellViewModels.send(cellViewModels)
+    }
+    
     private func markNewsAsRead(at index: Int) {
-        var cellViewModels = state.cellViewModels.value
+        var cellViewModels = state.dailyNewsCellViewModels.value
         
         guard !cellViewModels[index].isRead else { return }
         
         cellViewModels[index].isRead = true
-        state.cellViewModels.send(cellViewModels)
+        state.dailyNewsCellViewModels.send(cellViewModels)
         updateTodayAllReadStatus()
     }
     
     private func updateTodayAllReadStatus() {
-        let allItemsRead = state.cellViewModels.value.allSatisfy { $0.isRead }
-        state.isTodayAllRead.send(allItemsRead)
+        let allItemsRead = state.dailyNewsCellViewModels.value.allSatisfy { $0.isRead }
+        guard allItemsRead else { return }
+        
+        localStorageService.newsData.totalDaysAllNewsRead += 1
+        localStorageService.newsData.monthlyCompletionDates.append(Date().formatAsDayOnly())
+        state.totalDaysAllNewsRead.send(localStorageService.newsData.totalDaysAllNewsRead)
+        state.isTodayAllRead.send(true)
+        updateMonthlyRecordCellViewModels()
     }
     
     private func updateSelectedNewsURL(at index: Int) {
-        let urlString = state.cellViewModels.value[index].dailyNews.naverUrl
+        let urlString = state.dailyNewsCellViewModels.value[index].dailyNews.naverUrl
         state.selectedNewsURL.send(URL(string: urlString))
     }
     

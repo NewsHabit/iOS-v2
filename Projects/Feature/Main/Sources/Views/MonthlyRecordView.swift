@@ -12,19 +12,6 @@ import Shared
 import PinLayout
 
 public final class MonthlyRecordView: UIView {
-    private var daysInCurrentMonth: Int {
-        let calendar = Calendar.current
-        let range = calendar.range(of: .day, in: .month, for: Date())!
-        return range.count
-    }
-    
-    private var firstWeekdayInCurrentMonth: Int {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month], from: Date())
-        let startOfMonth = calendar.date(from: components)!
-        return calendar.component(.weekday, from: startOfMonth)
-    }
-    
     // MARK: - Components
     
     private let titleLabel = {
@@ -41,7 +28,6 @@ public final class MonthlyRecordView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(cellType: MonthlyRecordCell.self)
         collectionView.delegate = self
-        collectionView.dataSource = self
         return collectionView
     }()
     
@@ -98,31 +84,5 @@ extension MonthlyRecordView: UICollectionViewDelegateFlowLayout {
         let availableWidth = collectionView.frame.width - CGFloat(paddingSpace)
         let widthPerItem = availableWidth / CGFloat(itemsPerRow)
         return CGSize(width: widthPerItem, height: widthPerItem)
-    }
-}
-
-extension MonthlyRecordView: UICollectionViewDataSource {
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        // 현재 달의 일수 + 시작 요일의 오프셋
-        return daysInCurrentMonth + firstWeekdayInCurrentMonth - 1
-    }
-    
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(
-            for: indexPath,
-            cellType: MonthlyRecordCell.self
-        )
-        let dayIndex = indexPath.row - (firstWeekdayInCurrentMonth - 1)
-        if dayIndex >= 0 {
-            let dayString = String(format: "%02d", dayIndex + 1)
-            cell.configure(with: dayString)
-        }
-        return cell
     }
 }

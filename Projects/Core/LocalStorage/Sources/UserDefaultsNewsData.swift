@@ -16,5 +16,5 @@ public final class UserDefaultsNewsData: NewsDataStorageProtocol {
     public var totalDaysAllNewsRead: Int
     
     @UserDefaultsData(key: "monthlyCompletionDates", defaultValue: [])
-    public var monthlyCompletionDates: [Date]
+    public var monthlyCompletionDates: [String]
 }

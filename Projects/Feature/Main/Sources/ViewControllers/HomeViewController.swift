@@ -13,7 +13,8 @@ import Shared
 public final class HomeViewController: BaseViewController<HomeView> {
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var dataSource: UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>!
+    private var dailyDataSource: UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>!
+    private var monthlyDataSource: UICollectionViewDiffableDataSource<Section, MonthlyRecordCellViewModel>!
     
     // MARK: - Init
     
@@ -35,6 +36,7 @@ public final class HomeViewController: BaseViewController<HomeView> {
         setupDelegate()
         setupDataSource()
         setupBinding()
+        viewModel.send(.viewDidLoad)
     }
     
     // MARK: - Setup Methods
@@ -49,12 +51,23 @@ public final class HomeViewController: BaseViewController<HomeView> {
     }
     
     private func setupDataSource() {
-        dataSource = UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>(
+        dailyDataSource = UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>(
             tableView: dailyNewsTableView
         ) { (tableView, indexPath, cellViewModel) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(
                 for: indexPath,
                 cellType: DailyNewsCell.self
+            )
+            cell.configure(with: cellViewModel)
+            return cell
+        }
+        
+        monthlyDataSource = UICollectionViewDiffableDataSource<Section, MonthlyRecordCellViewModel>(
+            collectionView: monthlyRecordCollectionView
+        ) { (collectionView, indexPath, cellViewModel) -> UICollectionViewCell? in
+            let cell = collectionView.dequeueReusableCell(
+                for: indexPath,
+                cellType: MonthlyRecordCell.self
             )
             cell.configure(with: cellViewModel)
             return cell
@@ -68,10 +81,16 @@ public final class HomeViewController: BaseViewController<HomeView> {
                 setSubTitle("👀 지금까지 \(totalDaysAllNewsRead)일 완독했어요!", Colors.gray01)
             }.store(in: &cancellables)
         
-        viewModel.state.cellViewModels
+        viewModel.state.dailyNewsCellViewModels
             .sink { [weak self] cellViewModels in
                 guard let self = self else { return }
-                updateDataSource(with: cellViewModels)
+                updateDailyDataSource(with: cellViewModels)
+            }.store(in: &cancellables)
+        
+        viewModel.state.monthlyRecordCellViewModels
+            .sink { [weak self] cellViewModels in
+                guard let self = self else { return }
+                updateMonthlyDataSource(with: cellViewModels)
             }.store(in: &cancellables)
         
         viewModel.state.selectedNewsURL
@@ -91,11 +110,18 @@ public final class HomeViewController: BaseViewController<HomeView> {
             }.store(in: &cancellables)
     }
     
-    private func updateDataSource(with cellViewModels: [DailyNewsCellViewModel]) {
+    private func updateDailyDataSource(with cellViewModels: [DailyNewsCellViewModel]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, DailyNewsCellViewModel>()
         snapshot.appendSections([.main])
         snapshot.appendItems(cellViewModels)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dailyDataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func updateMonthlyDataSource(with cellViewModels: [MonthlyRecordCellViewModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MonthlyRecordCellViewModel>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(cellViewModels, toSection: .main)
+        monthlyDataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
@@ -116,5 +142,9 @@ private extension HomeViewController {
     
     var messageContainer: UIView {
         contentView.dailyNewsView.messageContainer
+    }
+    
+    var monthlyRecordCollectionView: UICollectionView {
+        contentView.monthlyRecordView.collectionView
     }
 }

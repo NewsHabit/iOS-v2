@@ -44,15 +44,19 @@ public final class MonthlyRecordCell: UICollectionViewCell, Reusable {
     private func setupCell() {
         clipsToBounds = true
         layer.cornerRadius = 10
-//        layer.borderWidth = 3
-//        layer.borderColor = Colors.primary.cgColor
-//        backgroundColor = Colors.primary.withAlphaComponent(0.7)
         contentView.addSubview(dayLabel)
     }
     
     // MARK: - Configure
     
-    public func configure(with day: String) {
-        dayLabel.text = day
+    public func configure(with viewModel: MonthlyRecordCellViewModel) {
+        dayLabel.text = viewModel.day
+        backgroundColor = viewModel.isRead ? Colors.primary.withAlphaComponent(0.7) : .clear
+        if viewModel.isToday {
+            layer.borderWidth = 3
+            layer.borderColor = Colors.primary.cgColor
+        } else {
+            layer.borderWidth = 0
+        }
     }
 }
