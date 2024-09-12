@@ -129,8 +129,6 @@ final class DailyNewsCell: UITableViewCell, Reusable {
             categoryLabel.widthAnchor.constraint(equalToConstant: 50),
             categoryLabel.heightAnchor.constraint(equalToConstant: 18)
         ])
-        
-        layoutIfNeeded()
     }
     
     // MARK: - Configure
