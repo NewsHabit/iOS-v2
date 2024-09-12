@@ -16,12 +16,13 @@ public final class HotNewsViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
-        
+        case viewWillAppear
     }
     
     // MARK: - State
     
     public struct State {
+        var fullDateTime: CurrentValueSubject<String, Never>
         var cellViewModels: CurrentValueSubject<[HotNews], Never>
     }
     
@@ -38,7 +39,10 @@ public final class HotNewsViewModel: ViewModel {
     public init(localStorageService: LocalStorageProtocol, newsService: NewsProtocol) {
         self.localStorageService = localStorageService
         self.newsService = newsService
-        self.state = State(cellViewModels: .init([]))
+        self.state = State(
+            fullDateTime: .init(Date().formatAsFullDateTime()),
+            cellViewModels: .init([])
+        )
         updateCellViewModels()
         
         bindAction()
@@ -53,7 +57,18 @@ public final class HotNewsViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
+        case .viewWillAppear:
+            updateState()
         }
+    }
+    
+    private func updateState() {
+        let currentFullDateTime = Date().formatAsFullDateTime()
+        
+        if currentFullDateTime == state.fullDateTime.value { return }
+        
+        state.fullDateTime.send(currentFullDateTime)
+        updateCellViewModels()
     }
     
     private func updateCellViewModels() {

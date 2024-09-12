@@ -40,7 +40,7 @@ public final class HotViewController: BaseViewController<HotView> {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setSubTitle("\(Date().formatAsFullDateTime()) 기준", Colors.gray04)
+        viewModel.send(.viewWillAppear)
     }
     
     // MARK: - Setup Methods
@@ -59,6 +59,12 @@ public final class HotViewController: BaseViewController<HotView> {
     }
     
     private func setupBinding() {
+        viewModel.state.fullDateTime
+            .sink { [weak self] fullDateTime in
+                guard let self = self else { return }
+                setSubTitle("\(fullDateTime) 기준", Colors.gray04)
+            }.store(in: &cancellables)
+        
         viewModel.state.cellViewModels
             .sink { [weak self] cellViewModels in
                 guard let self = self else { return }
@@ -75,6 +81,10 @@ public final class HotViewController: BaseViewController<HotView> {
 }
 
 private extension HotViewController {
+    var refreshControl: UIRefreshControl {
+        contentView.refreshControl
+    }
+    
     var hotNewsTableView: UITableView {
         contentView.tableView
     }
