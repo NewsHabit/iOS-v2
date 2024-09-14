@@ -16,6 +16,7 @@ public final class HotViewModel: ViewModel {
     // MARK: - Action
     
     public enum Action {
+        case viewDidLoad
         case viewWillAppear
         case refreshControlDidTrigger
         case cellDidTap(index: Int)
@@ -50,7 +51,6 @@ public final class HotViewModel: ViewModel {
             selectedNewsURL: .init(nil)
         )
         
-        fetchHotNews()
         bindAction()
     }
     
@@ -63,6 +63,8 @@ public final class HotViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
+        case .viewDidLoad:
+            fetchHotNews()
         case .viewWillAppear:
             updateState()
         case .refreshControlDidTrigger:

@@ -49,9 +49,9 @@ public final class MonthlyRecordCell: UICollectionViewCell, Reusable {
     
     // MARK: - Configure
     
-    public func configure(with viewModel: MonthlyRecordCellViewModel) {
+    public func configure(with viewModel: MonthlyRecordData) {
         dayLabel.text = viewModel.day
-        backgroundColor = viewModel.isRead ? Colors.primary.withAlphaComponent(0.7) : .clear
+        backgroundColor = viewModel.isRead ? Colors.primary.withAlphaComponent(0.6) : .clear
         if viewModel.isToday {
             layer.borderWidth = 3
             layer.borderColor = Colors.primary.cgColor

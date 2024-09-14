@@ -24,8 +24,8 @@ public final class HomeViewModel: ViewModel {
     
     public struct State {
         var totalDaysAllNewsRead: CurrentValueSubject<Int, Never>
-        var dailyNewsCellViewModels: CurrentValueSubject<[DailyNewsCellViewModel], Never>
-        var monthlyRecordCellViewModels: CurrentValueSubject<[MonthlyRecordCellViewModel], Never>
+        var dailyNewsCellViewModels: CurrentValueSubject<[DailyNewsData], Never>
+        var monthlyRecordCellViewModels: CurrentValueSubject<[MonthlyRecordData], Never>
         var selectedNewsURL: CurrentValueSubject<URL?, Never>
         var isTodayAllRead: CurrentValueSubject<Bool, Never>
     }
@@ -64,12 +64,21 @@ public final class HomeViewModel: ViewModel {
     private func handleAction(_ action: Action) {
         switch action {
         case .viewDidLoad:
-            fetchDailyNews()
+            if localStorageService.appState.lastAccessDate == Date().formatAsShortDate() {
+                getDailyNewsWithLocalStorage()
+            } else {
+                fetchDailyNews()
+            }
             updateMonthlyRecordCellViewModels()
         case let .newsCellDidTap(index):
             markNewsAsRead(at: index)
             updateSelectedNewsURL(at: index)
         }
+    }
+    
+    private func getDailyNewsWithLocalStorage() {
+        let cellViewModels = localStorageService.newsData.cachedDailyNews
+        state.dailyNewsCellViewModels.send(cellViewModels)
     }
     
     private func fetchDailyNews() {
@@ -89,9 +98,12 @@ public final class HomeViewModel: ViewModel {
             }, receiveValue: { [weak self] response in
                 guard let self else { return }
                 let cellViewModels = response.recommendedNewsResponseDtoList.map {
-                    DailyNewsCellViewModel(dailyNews: $0, isRead: false)
+                    DailyNewsData(dailyNews: $0, isRead: false)
                 }
                 state.dailyNewsCellViewModels.send(cellViewModels)
+                
+                localStorageService.newsData.cachedDailyNews = cellViewModels
+                localStorageService.appState.lastAccessDate = Date().formatAsShortDate()
             }).store(in: &cancellables)
     }
     
@@ -109,12 +121,12 @@ public final class HomeViewModel: ViewModel {
         let today = calendar.dateComponents([.year, .month, .day], from: date)
         
         let cellViewModels = (1..<firstWeekday).map { _ in
-            MonthlyRecordCellViewModel(day: nil, isRead: false, isToday: false)
+            MonthlyRecordData(day: nil, isRead: false, isToday: false)
         } + (1...daysInMonth).map { day in
             let dayString = String(format: "%02d", day)
             let isRead = localStorageService.newsData.monthlyCompletionDates.contains(dayString)
             let isToday = today.year == year && today.month == month && today.day == day
-            return MonthlyRecordCellViewModel(day: dayString, isRead: isRead, isToday: isToday)
+            return MonthlyRecordData(day: dayString, isRead: isRead, isToday: isToday)
         }
         
         state.monthlyRecordCellViewModels.send(cellViewModels)
@@ -127,6 +139,7 @@ public final class HomeViewModel: ViewModel {
         
         cellViewModels[index].isRead = true
         state.dailyNewsCellViewModels.send(cellViewModels)
+        localStorageService.newsData.cachedDailyNews = cellViewModels
         updateTodayAllReadStatus()
     }
     

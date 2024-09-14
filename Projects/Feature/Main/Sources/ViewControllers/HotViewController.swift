@@ -37,6 +37,7 @@ public final class HotViewController: BaseViewController<HotView> {
         setupDataSource()
         setupBinding()
         setupAction()
+        viewModel.send(.viewDidLoad)
     }
     
     public override func viewWillAppear(_ animated: Bool) {

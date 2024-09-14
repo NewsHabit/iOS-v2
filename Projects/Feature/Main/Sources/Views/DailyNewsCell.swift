@@ -133,7 +133,7 @@ final class DailyNewsCell: UITableViewCell, Reusable {
     
     // MARK: - Configure
     
-    public func configure(with viewModel: DailyNewsCellViewModel) {
+    public func configure(with viewModel: DailyNewsData) {
         readStateView.isHidden = viewModel.isRead
         titleLabel.text = viewModel.dailyNews.title
         categoryLabel.text = CategoryType.convertAPIIdentifier(from: viewModel.dailyNews.category) 

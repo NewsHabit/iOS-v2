@@ -8,9 +8,13 @@
 import Foundation
 
 import CoreLocalStorageInterface
+import Shared
 
 public final class UserDefaultsNewsData: NewsDataStorageProtocol {
     public init() {}
+    
+    @UserDefaultsData(key: "cachedDailyNews", defaultValue: [])
+    public var cachedDailyNews: [DailyNewsData]
     
     @UserDefaultsData(key: "totalDaysAllNewsRead", defaultValue: 0)
     public var totalDaysAllNewsRead: Int

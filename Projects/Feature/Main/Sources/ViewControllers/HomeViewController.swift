@@ -13,8 +13,8 @@ import Shared
 public final class HomeViewController: BaseViewController<HomeView> {
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var dailyDataSource: UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>!
-    private var monthlyDataSource: UICollectionViewDiffableDataSource<Section, MonthlyRecordCellViewModel>!
+    private var dailyDataSource: UITableViewDiffableDataSource<Section, DailyNewsData>!
+    private var monthlyDataSource: UICollectionViewDiffableDataSource<Section, MonthlyRecordData>!
     
     // MARK: - Init
     
@@ -51,7 +51,7 @@ public final class HomeViewController: BaseViewController<HomeView> {
     }
     
     private func setupDataSource() {
-        dailyDataSource = UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>(
+        dailyDataSource = UITableViewDiffableDataSource<Section, DailyNewsData>(
             tableView: dailyNewsTableView
         ) { (tableView, indexPath, cellViewModel) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(
@@ -62,7 +62,7 @@ public final class HomeViewController: BaseViewController<HomeView> {
             return cell
         }
         
-        monthlyDataSource = UICollectionViewDiffableDataSource<Section, MonthlyRecordCellViewModel>(
+        monthlyDataSource = UICollectionViewDiffableDataSource<Section, MonthlyRecordData>(
             collectionView: monthlyRecordCollectionView
         ) { (collectionView, indexPath, cellViewModel) -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(
@@ -110,15 +110,15 @@ public final class HomeViewController: BaseViewController<HomeView> {
             }.store(in: &cancellables)
     }
     
-    private func updateDailyDataSource(with cellViewModels: [DailyNewsCellViewModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyNewsCellViewModel>()
+    private func updateDailyDataSource(with cellViewModels: [DailyNewsData]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyNewsData>()
         snapshot.appendSections([.main])
         snapshot.appendItems(cellViewModels)
         dailyDataSource.apply(snapshot, animatingDifferences: false)
     }
     
-    private func updateMonthlyDataSource(with cellViewModels: [MonthlyRecordCellViewModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, MonthlyRecordCellViewModel>()
+    private func updateMonthlyDataSource(with cellViewModels: [MonthlyRecordData]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MonthlyRecordData>()
         snapshot.appendSections([.main])
         snapshot.appendItems(cellViewModels, toSection: .main)
         monthlyDataSource.apply(snapshot, animatingDifferences: false)
