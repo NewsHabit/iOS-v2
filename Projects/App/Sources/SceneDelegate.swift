@@ -5,6 +5,7 @@
 //  Created by 지연 on 8/25/24.
 //
 
+import Combine
 import UIKit
 
 import Core
@@ -15,7 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     let localStorageService = LocalStorageService()
     var onboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol?
-
+    var cancellables = Set<AnyCancellable>()
+    
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -45,6 +47,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             notificationService: notificationService
         )
         window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+        notificationService.requestNotificationPermission()
+            .sink { [weak self] permission in
+                self?.localStorageService.userSettings.isNotificationEnabled = permission
+            }.store(in: &cancellables)
     }
     
     private func launchOnboardingProcess() {
