@@ -9,6 +9,7 @@ import Combine
 import Foundation
 
 import Core
+import Domain
 import Shared
 
 public final class ProfileViewModel: ViewModel {
@@ -31,11 +32,16 @@ public final class ProfileViewModel: ViewModel {
     public var cancellables = Set<AnyCancellable>()
     private(set) var state: State
     private var localStorageService: LocalStorageProtocol
+    private var notificationService: NotificationProtocol
     
     // MARK: - Init
     
-    public init(localStorageService: LocalStorageProtocol) {
+    public init(
+        localStorageService: LocalStorageProtocol,
+        notificationService: NotificationProtocol
+    ) {
         self.localStorageService = localStorageService
+        self.notificationService = notificationService
         self.state = State(
             nickname: .init(localStorageService.userSettings.nickname)
         )
@@ -56,6 +62,10 @@ public final class ProfileViewModel: ViewModel {
             state.nickname.send(nickname)
         case .saveButtonDidTap:
             localStorageService.userSettings.nickname = state.nickname.value
+            NotificationCenter.default.post(name: .NicknameDidChangeNotification, object: nil)
+            if localStorageService.userSettings.isNotificationEnabled {
+                notificationService.updateNotificationSettings(isEnabled: true, time: nil)
+            }
         }
     }
     

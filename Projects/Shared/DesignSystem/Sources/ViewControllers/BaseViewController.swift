@@ -89,12 +89,14 @@ open class BaseViewController<View: UIView>: UIViewController, NavigationBarConf
         largeTitleLabel.pin
             .top(30)
             .left(20)
-            .sizeToFit()
+            .width(view.frame.width - 20)
+            .sizeToFit(.width)
 
         subtitleLabel.pin
             .top(to: largeTitleLabel.edge.bottom).marginTop(5)
             .left(20)
-            .sizeToFit()
+            .width(view.frame.width - 20)
+            .sizeToFit(.width)
 
         navigationBar.pin
             .height(subtitleLabel.frame.maxY + 15)

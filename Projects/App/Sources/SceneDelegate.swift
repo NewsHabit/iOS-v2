@@ -32,6 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         
         setupOnboardingCompletionObserver()
+        UNUserNotificationCenter.current().delegate = self
     }
     
     private func launchMainView() {
@@ -76,4 +77,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {}
 
     func sceneDidEnterBackground(_ scene: UIScene) {}
+}
+
+extension SceneDelegate: UNUserNotificationCenterDelegate {
+    // 앱이 포그라운드 상태일 때 알림이 도착하면 호출
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions
+        ) -> Void) {
+        // 알림 배너, 소리 등을 표시하도록 설정
+        completionHandler([.banner, .badge, .list, .sound])
+    }
 }

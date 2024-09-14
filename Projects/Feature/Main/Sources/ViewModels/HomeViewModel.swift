@@ -18,11 +18,13 @@ public final class HomeViewModel: ViewModel {
     public enum Action {
         case viewDidLoad
         case newsCellDidTap(index: Int)
+        case nicknameDidChange
     }
     
     // MARK: - State
     
     public struct State {
+        var nickname: CurrentValueSubject<String, Never>
         var totalDaysAllNewsRead: CurrentValueSubject<Int, Never>
         var dailyNewsCellViewModels: CurrentValueSubject<[DailyNewsData], Never>
         var monthlyRecordCellViewModels: CurrentValueSubject<[MonthlyRecordData], Never>
@@ -44,6 +46,7 @@ public final class HomeViewModel: ViewModel {
         self.localStorageService = localStorageService
         self.newsService = newsService
         self.state = State(
+            nickname: .init(localStorageService.userSettings.nickname),
             totalDaysAllNewsRead: .init(localStorageService.newsData.totalDaysAllNewsRead),
             dailyNewsCellViewModels: .init([]),
             monthlyRecordCellViewModels: .init([]),
@@ -73,6 +76,8 @@ public final class HomeViewModel: ViewModel {
         case let .newsCellDidTap(index):
             markNewsAsRead(at: index)
             updateSelectedNewsURL(at: index)
+        case .nicknameDidChange:
+            updateNickname()
         }
     }
     
@@ -157,6 +162,11 @@ public final class HomeViewModel: ViewModel {
     private func updateSelectedNewsURL(at index: Int) {
         let urlString = state.dailyNewsCellViewModels.value[index].dailyNews.naverUrl
         state.selectedNewsURL.send(URL(string: urlString))
+    }
+    
+    private func updateNickname() {
+        let nickname = localStorageService.userSettings.nickname
+        state.nickname.send(nickname)
     }
     
     public func send(_ action: Action) {

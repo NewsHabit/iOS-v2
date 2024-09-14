@@ -23,7 +23,10 @@ public final class SettingsViewFactory {
     }
     
     public func makeProfileViewController() -> ProfileViewController {
-        let viewModel = ProfileViewModel(localStorageService: localStorageService)
+        let viewModel = ProfileViewModel(
+            localStorageService: localStorageService,
+            notificationService: notificationService
+        )
         return ProfileViewController(viewModel: viewModel)
     }
     

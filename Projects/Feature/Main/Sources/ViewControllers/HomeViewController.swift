@@ -36,7 +36,12 @@ public final class HomeViewController: BaseViewController<HomeView> {
         setupDelegate()
         setupDataSource()
         setupBinding()
+        setupNotification()
         viewModel.send(.viewDidLoad)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Setup Methods
@@ -46,7 +51,6 @@ public final class HomeViewController: BaseViewController<HomeView> {
     }
     
     private func setupNavigationBar() {
-        setLargeTitle("사용자님의 뉴빗", Colors.gray01)
         setBackgroundColor(Colors.gray08)
     }
     
@@ -75,6 +79,12 @@ public final class HomeViewController: BaseViewController<HomeView> {
     }
     
     private func setupBinding() {
+        viewModel.state.nickname
+            .sink { [weak self] nickname in
+                guard let self = self else { return }
+                setLargeTitle("\(nickname)님의 뉴빗", Colors.gray01)
+            }.store(in: &cancellables)
+        
         viewModel.state.totalDaysAllNewsRead
             .sink { [weak self] totalDaysAllNewsRead in
                 guard let self = self else { return }
@@ -122,6 +132,19 @@ public final class HomeViewController: BaseViewController<HomeView> {
         snapshot.appendSections([.main])
         snapshot.appendItems(cellViewModels, toSection: .main)
         monthlyDataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func setupNotification() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleNicknameChange),
+            name: .NicknameDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleNicknameChange() {
+        viewModel.send(.nicknameDidChange)
     }
 }
 
