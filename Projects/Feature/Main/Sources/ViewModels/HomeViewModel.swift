@@ -51,7 +51,7 @@ public final class HomeViewModel: ViewModel {
             dailyNewsCellViewModels: .init([]),
             monthlyRecordCellViewModels: .init([]),
             selectedNewsURL: .init(nil),
-            isTodayAllRead: .init(false)
+            isTodayAllRead: .init(localStorageService.newsData.monthlyCompletionDates.contains(Date().formatAsDayOnly()))
         )
         
         bindAction()
