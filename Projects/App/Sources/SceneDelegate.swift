@@ -5,6 +5,7 @@
 //  Created by 지연 on 8/25/24.
 //
 
+import Combine
 import UIKit
 
 import Core
@@ -15,7 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     let localStorageService = LocalStorageService()
     var onboardingViewControllerFactory: OnboardingViewControllerFactoryProtocol?
-
+    var cancellables = Set<AnyCancellable>()
+    
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -32,6 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         
         setupOnboardingCompletionObserver()
+        UNUserNotificationCenter.current().delegate = self
     }
     
     private func launchMainView() {
@@ -44,6 +47,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             notificationService: notificationService
         )
         window?.rootViewController = MainTabBarController(factory: mainViewControllerFactory)
+        notificationService.requestNotificationPermission()
+            .sink { [weak self] permission in
+                self?.localStorageService.userSettings.isNotificationEnabled = permission
+            }.store(in: &cancellables)
     }
     
     private func launchOnboardingProcess() {
@@ -76,4 +83,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {}
 
     func sceneDidEnterBackground(_ scene: UIScene) {}
+}
+
+extension SceneDelegate: UNUserNotificationCenterDelegate {
+    // 앱이 포그라운드 상태일 때 알림이 도착하면 호출
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions
+        ) -> Void) {
+        // 알림 배너, 소리 등을 표시하도록 설정
+        completionHandler([.banner, .badge, .list, .sound])
+    }
 }

@@ -14,7 +14,7 @@ import PinLayout
 public final class HotView: UIView {
     // MARK: - Components
     
-    private let refreshControl = UIRefreshControl()
+    let refreshControl = UIRefreshControl()
     
     lazy var tableView = {
         let tableView = UITableView()

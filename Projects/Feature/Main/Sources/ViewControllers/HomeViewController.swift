@@ -11,14 +11,15 @@ import UIKit
 import Shared
 
 public final class HomeViewController: BaseViewController<HomeView> {
-    private let dailyNewsViewModel: DailyNewsViewModel
+    private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var dataSource: UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>!
+    private var dailyDataSource: UITableViewDiffableDataSource<Section, DailyNewsData>!
+    private var monthlyDataSource: UICollectionViewDiffableDataSource<Section, MonthlyRecordData>!
     
     // MARK: - Init
     
-    public init(dailyNewsViewModel: DailyNewsViewModel) {
-        self.dailyNewsViewModel = dailyNewsViewModel
+    public init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,20 +33,29 @@ public final class HomeViewController: BaseViewController<HomeView> {
         super.viewDidLoad()
         
         setupNavigationBar()
+        setupDelegate()
         setupDataSource()
         setupBinding()
+        setupNotification()
+        viewModel.send(.viewDidLoad)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Setup Methods
     
+    private func setupDelegate() {
+        dailyNewsTableView.delegate = self
+    }
+    
     private func setupNavigationBar() {
-        setLargeTitle("사용자님의 뉴빗", Colors.gray01)
-        setSubTitle("👀 지금까지 0일 완독했어요!", Colors.gray01)
         setBackgroundColor(Colors.gray08)
     }
     
     private func setupDataSource() {
-        dataSource = UITableViewDiffableDataSource<Section, DailyNewsCellViewModel>(
+        dailyDataSource = UITableViewDiffableDataSource<Section, DailyNewsData>(
             tableView: dailyNewsTableView
         ) { (tableView, indexPath, cellViewModel) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(
@@ -55,26 +65,109 @@ public final class HomeViewController: BaseViewController<HomeView> {
             cell.configure(with: cellViewModel)
             return cell
         }
+        
+        monthlyDataSource = UICollectionViewDiffableDataSource<Section, MonthlyRecordData>(
+            collectionView: monthlyRecordCollectionView
+        ) { (collectionView, indexPath, cellViewModel) -> UICollectionViewCell? in
+            let cell = collectionView.dequeueReusableCell(
+                for: indexPath,
+                cellType: MonthlyRecordCell.self
+            )
+            cell.configure(with: cellViewModel)
+            return cell
+        }
     }
     
     private func setupBinding() {
-        dailyNewsViewModel.state.cellViewModels
+        viewModel.state.nickname
+            .sink { [weak self] nickname in
+                guard let self = self else { return }
+                setLargeTitle("\(nickname)님의 뉴빗", Colors.gray01)
+            }.store(in: &cancellables)
+        
+        viewModel.state.totalDaysAllNewsRead
+            .sink { [weak self] totalDaysAllNewsRead in
+                guard let self = self else { return }
+                setSubTitle("👀 지금까지 \(totalDaysAllNewsRead)일 완독했어요!", Colors.gray01)
+            }.store(in: &cancellables)
+        
+        viewModel.state.dailyNewsCellViewModels
             .sink { [weak self] cellViewModels in
                 guard let self = self else { return }
-                updateDataSource(with: cellViewModels)
+                updateDailyDataSource(with: cellViewModels)
+            }.store(in: &cancellables)
+        
+        viewModel.state.monthlyRecordCellViewModels
+            .sink { [weak self] cellViewModels in
+                guard let self = self else { return }
+                updateMonthlyDataSource(with: cellViewModels)
+            }.store(in: &cancellables)
+        
+        viewModel.state.selectedNewsURL
+            .sink { [weak self] newsURL in
+                guard let self = self, let url = newsURL else { return }
+                navigationController?.pushViewController(
+                    NewsViewController(url: url),
+                    animated: true
+                )
+            }.store(in: &cancellables)
+        
+        viewModel.state.isTodayAllRead
+            .sink { [weak self] isTodayAllRead in
+                guard let self = self else { return }
+                messageContainer.isHidden = !isTodayAllRead
+                dailyNewsView.setNeedsLayout()
             }.store(in: &cancellables)
     }
     
-    private func updateDataSource(with cellViewModels: [DailyNewsCellViewModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyNewsCellViewModel>()
+    private func updateDailyDataSource(with cellViewModels: [DailyNewsData]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyNewsData>()
         snapshot.appendSections([.main])
         snapshot.appendItems(cellViewModels)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dailyDataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func updateMonthlyDataSource(with cellViewModels: [MonthlyRecordData]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MonthlyRecordData>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(cellViewModels, toSection: .main)
+        monthlyDataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func setupNotification() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleNicknameChange),
+            name: .NicknameDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleNicknameChange() {
+        viewModel.send(.nicknameDidChange)
+    }
+}
+
+extension HomeViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.send(.newsCellDidTap(index: indexPath.row))
     }
 }
 
 private extension HomeViewController {
+    var dailyNewsView: DailyNewsView {
+        contentView.dailyNewsView
+    }
+    
     var dailyNewsTableView: UITableView {
         contentView.dailyNewsView.tableView
+    }
+    
+    var messageContainer: UIView {
+        contentView.dailyNewsView.messageContainer
+    }
+    
+    var monthlyRecordCollectionView: UICollectionView {
+        contentView.monthlyRecordView.collectionView
     }
 }

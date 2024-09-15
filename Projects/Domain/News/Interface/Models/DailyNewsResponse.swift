@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Shared
+
 public struct DailyNewsResponse: Codable {
     public let recommendedNewsResponseDtoList: [DailyNews]
 }

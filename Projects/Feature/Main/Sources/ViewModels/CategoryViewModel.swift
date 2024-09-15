@@ -56,7 +56,7 @@ public final class CategoryViewModel: ViewModel {
     
     private func handleAction(_ action: Action) {
         switch action {
-        case let .categoryDidSelect(category: category):
+        case let .categoryDidSelect(category):
             updateCellViewModels(for: category)
         case .saveButtonDidTap:
             saveSelectedCategories()

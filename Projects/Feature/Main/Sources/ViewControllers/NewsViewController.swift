@@ -11,16 +11,20 @@ import WebKit
 import Shared
 
 public final class NewsViewController: BaseViewController<NewsHabitWebView> {
+    private let url: URL
     private var progressObserver: NSKeyValueObservation?
     
     // MARK: - Init
     
-    public init(url: URL?) {
+    public init(url: URL) {
+        self.url = url
+        
         super.init(nibName: nil, bundle: nil)
         
         setupNavigationBar()
+        setupDelegate()
         setupProgressObserver()
-        loadWebView(with: url)
+        loadWebView()
     }
     
     @available(*, unavailable)
@@ -31,6 +35,12 @@ public final class NewsViewController: BaseViewController<NewsHabitWebView> {
     deinit {
         progressObserver?.invalidate()
         webView.stopLoading()
+    }
+    
+    // MARK: - Setup Methods
+    
+    private func setupDelegate() {
+        webView.navigationDelegate = self
     }
     
     private func setupNavigationBar() {
@@ -48,14 +58,17 @@ public final class NewsViewController: BaseViewController<NewsHabitWebView> {
             }
     }
     
-    private func loadWebView(with url: URL?) {
-        guard let url = url else { return }
-        webView.navigationDelegate = self
-        webView.load(URLRequest(url: url))
+    private func loadWebView() {
+        let request = URLRequest(url: url)
+        webView.load(request)
     }
     
     @objc private func handleSharedButtonTap() {
-        print("share")
+        let activityViewController = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil
+        )
+        present(activityViewController, animated: true)
     }
 }
 

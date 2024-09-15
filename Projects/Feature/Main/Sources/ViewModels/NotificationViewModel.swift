@@ -62,7 +62,7 @@ public final class NotificationViewModel: ViewModel {
             isNotificationEnabled.toggle()
             state.isNotificationEnabled.send(isNotificationEnabled)
             updateNotification()
-        case let .notificationTimeDidUpdate(time: time):
+        case let .notificationTimeDidUpdate(time):
             state.notificationTime.send(time.formatAsTimeWithPeriod())
             updateNotification()
         }
